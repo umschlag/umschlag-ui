@@ -1,0 +1,55 @@
+{
+  "private": true,
+
+  "name": "harbor-ui",
+  "version": "0.0.0",
+  "description": "UI for Harbor, a docker distribution management system",
+  "homepage": "https://github.com/harborapp/harbor-ui#readme",
+  "license": "Apache-2.0",
+
+  "author": {
+    "name": "Thomas Boerger",
+    "email": "thomas@webhippie.de"
+  },
+
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/harborapp/harbor-ui.git"
+  },
+
+  "bugs": {
+    "url": "https://github.com/harborapp/harbor-ui/issues",
+    "email": "harbor@webhippie.de"
+  },
+
+  "config": {
+    "port": 8080
+  },
+
+  "scripts": {
+    "start": "gulp serve",
+    "test": "gulp test",
+    "posttest": "gulp lint", 
+    "deploy": "gulp deploy"
+  },
+
+  "devDependencies": {
+    "babelify": "^7.2.0",
+    "browserify": "^13.0.0",
+    "gulp": "^3.9.0",
+    "redux-devtools": "^3.0.1",
+    "vinyl-source-stream": "^1.1.0"
+  },
+
+  "dependencies": {
+    "react": "^0.14.6",
+    "react-dom": "^0.14.6",
+    "react-redux": "^4.0.6",
+    "redux": "^3.0.5"
+  },
+
+  "keywords": [
+    "docker",
+    "registry"
+  ],
+}

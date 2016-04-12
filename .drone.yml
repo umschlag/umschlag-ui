@@ -1,0 +1,27 @@
+build:
+  test:
+    image: webhippie/nodejs:latest
+    commands: []
+
+publish:
+  coverage:
+    server: http://coverage.dronehippie.de
+    token: $$GITHUB_APIKEY
+    when:
+      branch: master
+
+  github_release:
+    api_key: $$GITHUB_APIKEY
+    files:
+      - dist/*
+    when:
+      event: tag
+
+notify:
+  gitter:
+    webhook:
+      - $$GITTER_WEBHOOK
+
+cache:
+  mount:
+    - node_modules
