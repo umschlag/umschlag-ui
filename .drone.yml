@@ -1,7 +1,9 @@
 build:
   test:
     image: webhippie/nodejs:latest
-    commands: []
+    commands:
+      - make deps
+      - make build
 
 publish:
   coverage:
