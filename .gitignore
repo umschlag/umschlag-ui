@@ -1,4 +1,8 @@
 /node_modules
-/dist
+
+/assets/*.css
+/assets/*.css.map
+/assets/*.js
+/assets/*.js.map
 
 /.drone.sec.yml

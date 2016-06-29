@@ -3,21 +3,23 @@ build:
     image: webhippie/nodejs:latest
     commands:
       - make deps
+      - make lint
       - make build
+      - make test
 
 publish:
-  coverage:
-    server: http://coverage.dronehippie.de
-    token: $$GITHUB_APIKEY
-    when:
-      branch: master
+  # coverage:
+  #   server: http://coverage.dronehippie.de
+  #   token: $$GITHUB_APIKEY
+  #   when:
+  #     branch: master
 
-  github_release:
-    api_key: $$GITHUB_APIKEY
-    files:
-      - dist/*
-    when:
-      event: tag
+  # github_release:
+  #   api_key: $$GITHUB_APIKEY
+  #   files:
+  #     - dist/*
+  #   when:
+  #     event: tag
 
 notify:
   gitter:
