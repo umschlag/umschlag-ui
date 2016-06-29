@@ -8,17 +8,14 @@ all: deps build
 deps:
 	npm install
 
-build: dir
+build:
 	$(WEBPACK) -p
 
-watch: dir
+watch:
 	$(WEBPACK) -d -w
 
 serve:
 	go run server.go --scheme=http --host=localhost:8080
-
-dir:
-	mkdir -p $(ASSETS)
 
 test:
 	@echo "Should test here ;)"
@@ -29,4 +26,4 @@ lint:
 clean:
 	rm -rf $(ASSETS)
 
-.PHONY: all deps build watch serve dir test lint clean
+.PHONY: all deps build watch serve test lint clean

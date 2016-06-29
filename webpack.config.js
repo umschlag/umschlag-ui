@@ -32,20 +32,24 @@ module.exports = {
         loader: ExtractTextPlugin.extract(
           'css?sourceMap!' + 'less?sourceMap'
         )
-      }
+      },
+      {test: /\.(woff|woff2)(\?v=\d+\.\d+\.\d+)?$/, loader: 'url?limit=10000&mimetype=application/font-woff'},
+      {test: /\.svg(\?v=\d+\.\d+\.\d+)?$/, loader: 'url?limit=10000&mimetype=image/svg+xml'},
+      {test: /\.ttf(\?v=\d+\.\d+\.\d+)?$/, loader: 'url?limit=10000&mimetype=application/octet-stream'},
+      {test: /\.eot(\?v=\d+\.\d+\.\d+)?$/, loader: 'file'}
     ]
   },
 
-  externals: {
-    'immutable': 'Immutable',
-    'moment': 'moment',
-    'react': 'React',
-    'react-dom': 'ReactDOM',
-    'react-redux': 'ReactRedux',
-    'react-router': 'ReactRouter',
-    'redux': 'Redux',
-    'superagent': 'superagent'
-  },
+  // externals: {
+  //   'immutable': 'Immutable',
+  //   'moment': 'moment',
+  //   'react': 'React',
+  //   'react-dom': 'ReactDOM',
+  //   'react-redux': 'ReactRedux',
+  //   'react-router': 'ReactRouter',
+  //   'redux': 'Redux',
+  //   'superagent': 'superagent'
+  // },
 
   resolve: {
     extensions: [
