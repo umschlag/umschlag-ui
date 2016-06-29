@@ -1,4 +1,4 @@
-DIST := dist
+ASSETS := assets
 SRC := src
 WEBPACK := node_modules/.bin/webpack
 ESLINT := node_modules/.bin/eslint
@@ -9,18 +9,24 @@ deps:
 	npm install
 
 build: dir
-	$(WEBPACK) --optimize-minimize
+	$(WEBPACK) -p
 
 watch: dir
-	$(WEBPACK) -w
+	$(WEBPACK) -d -w
+
+serve:
+	go run server.go --scheme=http --host=localhost:8080
 
 dir:
-	mkdir -p $(DIST)
+	mkdir -p $(ASSETS)
+
+test:
+	@echo "Should test here ;)"
 
 lint:
 	$(ESLINT) $(SRC)/
 
 clean:
-	rm -rf $(DIST)
+	rm -rf $(ASSETS)
 
-.PHONY: all deps build watch dir lint clean
+.PHONY: all deps build watch serve dir test lint clean

@@ -14,7 +14,7 @@
 
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/harborapp/harbor-ui.git"
+    "url": "https://github.com/harborapp/harbor-ui.git"
   },
 
   "bugs": {
@@ -22,9 +22,16 @@
     "email": "harbor@webhippie.de"
   },
 
-  "config": {},
+  "config": {
 
-  "scripts": {},
+  },
+
+  "scripts": {
+    "dev": "webpack -d -w",
+    "build" : "webpack -p"
+  },
+
+  "main": "webpack.config.js",
 
   "devDependencies": {
     "babel-core": "^6.7.4",
@@ -44,12 +51,12 @@
   },
 
   "dependencies": {
-    "material-ui": "^0.15.0-beta.1",
     "immutable": "^3.7.6",
     "moment": "^2.12.0",
     "normalizr": "^2.0.1",
     "react": "^15.0.0",
     "react-dom": "^15.0.0",
+    "react-mdl": "^1.5.3",
     "react-tap-event-plugin": "^1.0.0",
     "react-redux": "^4.4.1",
     "react-router": "^2.0.1",
