@@ -1,5 +1,5 @@
-import Content from './content';
+import Body from './body';
 
 export default {
-  Content,
+  Body
 };

@@ -1,7 +1,7 @@
 //
 // Use this server to run this project in standalone mode to avoid having to
-// re-compile your Go code and re-launch Harbor every time you make a code
-// change. This server proxies all traffic to a running Harbor instance. This
+// re-compile your Go code and re-launch Umschlag every time you make a code
+// change. This server proxies all traffic to a running Umschlag instance. This
 // can be a local instance, or a remote instance, so you can develop against
 // real world data.
 //

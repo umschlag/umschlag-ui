@@ -1,14 +1,2 @@
 /node_modules
-
-/assets/*.css
-/assets/*.css.map
-/assets/*.js
-/assets/*.js.map
-
-/assets/*.woff2
-/assets/*.svg
-/assets/*.ttf
-/assets/*.eot
-/assets/*.woff
-
-/.drone.sec.yml
+/dist

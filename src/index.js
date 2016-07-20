@@ -1,42 +1,29 @@
-import React from 'react';
-import ReactDOM from 'react-dom';
-import { Provider } from 'react-redux';
-import { Router, browserHistory } from 'react-router';
-import { createStore, combineReducers, applyMiddleware } from 'redux';
-import thunk from 'redux-thunk';
-import createLogger from 'redux-logger';
-import { syncHistoryWithStore, routerReducer } from 'react-router-redux';
-
 import './index.less';
 
+import React from 'react';
+import ReactDOM from 'react-dom';
+import superagent from 'superagent';
+import { root } from 'baobab-react/higher-order';
+import { Router, browserHistory } from 'react-router';
+import { events } from './actions/events';
+import { tree } from './actions/tree';
 import { routes } from './routes';
-import { harbor } from './data/reducers';
 
-function configureStore(initialState) {
-  const logger = createLogger();
 
-  const createStoreWithMiddleware = applyMiddleware(
-    thunk,
-    logger
-  )(createStore);
+window.tree = tree;
+window.events = events;
 
-  let combinedReducers = combineReducers({
-    harbor,
-    routing: routerReducer,
-  });
-
-  return createStoreWithMiddleware(combinedReducers, initialState);
+class App extends React.Component {
+  render() {
+    return (
+      <Router history={browserHistory}>
+        {routes}
+      </Router>
+    );
+  }
 }
 
-const store = configureStore();
-const history = syncHistoryWithStore(browserHistory, store);
-
-let app = (
-  <Provider store={store}>
-    <Router history={history}>
-      {routes}
-    </Router>
-  </Provider>
+ReactDOM.render(
+  React.createElement(root(tree, App)),
+  document.getElementById('umschlag')
 );
-
-ReactDOM.render(app, document.querySelector('#app'));

@@ -1,31 +1,106 @@
-build:
-  test:
+workspace:
+  base: /srv/app
+  path: src/github.com/umschlag/umschlag-ui
+
+pipeline:
+  testing:
     image: webhippie/nodejs:latest
+    pull: true
     commands:
+      - make clean
       - make deps
       - make lint
-      - make build
       - make test
+      - make build
 
-publish:
+  updater:
+    image: webhippie/golang:latest
+    environment:
+      - GOPATH=/srv/app
+    commands:
+      - make publish
+    when:
+      event: [ push, tag ]
+      branch: [ master, refs/tags/* ]
+
   # coverage:
-  #   server: http://coverage.dronehippie.de
-  #   token: $$GITHUB_APIKEY
+  #  image: plugins/coverage
+
+  # rsync:
+  #   image: plugins/rsync
+  #   user: deploy
+  #   host: dl.webhippie.de
+  #   source: dist/release/
+  #   target: /usr/share/webapps/dl/public_html/umschlag-ui/master
+  #   recursive: true
+  #   delete: true
   #   when:
+  #     event: push
   #     branch: master
 
+  # rsync:
+  #   image: plugins/rsync
+  #   user: deploy
+  #   host: dl.webhippie.de
+  #   source: dist/release/
+  #   target: /usr/share/webapps/dl/public_html/umschlag-ui/$$TAG
+  #   recursive: true
+  #   delete: true
+  #   when:
+  #     event: tag
+  #     branch: refs/tags/*
+
+  # rsync:
+  #   image: plugins/rsync
+  #   user: deploy
+  #   host: dl.webhippie.de
+  #   source: dist/latest/
+  #   target: /usr/share/webapps/dl/public_html/umschlag-ui/latest
+  #   recursive: true
+  #   delete: true
+  #   when:
+  #     event: tag
+  #     branch: refs/tags/*
+
+  # rsync:
+  #   image: plugins/rsync
+  #   user: deploy
+  #   host: dl.webhippie.de
+  #   source: dist/publish/
+  #   target: /usr/share/webapps/dl/public_html/umschlag-ui/updates
+  #   recursive: true
+  #   delete: false
+  #   when:
+  #     event: tag
+  #     branch: refs/tags/*
+
   # github_release:
-  #   api_key: $$GITHUB_APIKEY
+  #   image: plugins/github-release
   #   files:
   #     - dist/*
   #   when:
   #     event: tag
+  #     branch: refs/tags/*
 
-notify:
-  gitter:
-    webhook:
-      - $$GITTER_WEBHOOK
+  docker:
+    image: plugins/docker
+    storage_driver: overlay
+    debug: true
+    repo: umschlag/umschlag-ui
+    tags: [ '${TAG}' ]
+    when:
+      event: tag
+      branch: refs/tags/*
 
-cache:
-  mount:
-    - node_modules
+  docker:
+    image: plugins/docker
+    storage_driver: overlay
+    debug: true
+    repo: umschlag/umschlag-ui
+    tags: [ 'latest' ]
+    when:
+      event: push
+      branch: master
+
+  # gitter:
+  #   image: plugins/gitter
