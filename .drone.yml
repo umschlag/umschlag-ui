@@ -7,9 +7,21 @@ pipeline:
     image: webhippie/nodejs:latest
     pull: true
     commands:
+      - npm install
+      - npm run lint
+      - npm run build
+      - npm run test
+
+  server:
+    image: webhippie/golang:latest
+    environment:
+      - GOPATH=/srv/app
+    pull: true
+    commands:
       - make clean
       - make deps
       - make lint
+      - make generate
       - make test
       - make build
 
@@ -17,6 +29,7 @@ pipeline:
     image: webhippie/golang:latest
     environment:
       - GOPATH=/srv/app
+    pull: true
     commands:
       - make publish
     when:
@@ -24,7 +37,7 @@ pipeline:
       branch: [ master, refs/tags/* ]
 
   # coverage:
-  #  image: plugins/coverage
+  #   image: plugins/coverage
 
   # rsync:
   #   image: plugins/rsync
@@ -77,10 +90,11 @@ pipeline:
   # github_release:
   #   image: plugins/github-release
   #   files:
-  #     - dist/*
+  #     - dist/release/*
   #   when:
   #     event: tag
   #     branch: refs/tags/*
+
 
   docker:
     image: plugins/docker

@@ -23,6 +23,25 @@ npm install
 npm run build
 ```
 
+If you also want to publish it as a single binary with our server based on Go
+make sure you have a working Go environment, for further reference or a guide
+take a look at the [install instructions](http://golang.org/doc/install.html).
+As this project relies on vendoring of the dependencies and we are not
+exporting `GO15VENDOREXPERIMENT=1` within our makefile you have to use a Go
+version `>= 1.6`
+
+```bash
+go get -d github.com/umschlag/umschlag-ui
+cd $GOPATH/src/github.com/umschlag/umschlag-ui
+make generate build
+
+bin/umschlag-ui -h
+```
+
+With the `make generate` command we are embedding all the static assets into the
+binary so there is no need for any webserver or anything else beside launching
+this binary.
+
 
 ## Development
 

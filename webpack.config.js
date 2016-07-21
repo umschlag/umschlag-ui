@@ -11,7 +11,7 @@ module.exports = {
   },
 
   output: {
-    path: require('path').resolve(__dirname, 'dist'),
+    path: require('path').resolve(__dirname, 'assets'),
     filename: 'scripts/umschlag.js',
     publicPath: '/'
   },
@@ -82,7 +82,8 @@ module.exports = {
       minify: {
         html5: true,
         collapseWhitespace: true
-      }
+      },
+      goTemplate: process.env.NODE_ENV === 'production'
     }),
     new Webpack.DefinePlugin({
       'process.env.NODE_ENV': JSON.stringify(
