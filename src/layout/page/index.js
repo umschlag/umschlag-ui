@@ -46,5 +46,5 @@ class Page extends React.Component {
 }
 
 export default branch({
-  state: ['pages']
+  state: ['pages'],
 }, Page);

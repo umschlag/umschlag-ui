@@ -6,11 +6,11 @@ export default class Image extends React.Component {
     const {
       src,
       alt,
-      ...otherProps
+      ...otherProps,
     } = this.props;
 
     return (
-      <img src={src} alt={alt} {...otherProps}/>
+      <img src={src} alt={alt} />
     );
   }
 }

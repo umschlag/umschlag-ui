@@ -5,5 +5,5 @@ export const tree = new Baobab({
 
   pages: {
 
-  }
+  },
 });
