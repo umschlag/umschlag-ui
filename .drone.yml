@@ -36,8 +36,9 @@ pipeline:
       event: [ push, tag ]
       branch: [ master, refs/tags/* ]
 
-  # coverage:
-  #   image: plugins/coverage
+  coverage:
+    image: umschlag/coverage
+    server: http://coverage.webhippie.de
 
   # rsync:
   #   image: plugins/rsync
@@ -95,7 +96,6 @@ pipeline:
   #     event: tag
   #     branch: refs/tags/*
 
-
   docker:
     image: plugins/docker
     storage_driver: overlay
@@ -116,5 +116,5 @@ pipeline:
       event: push
       branch: master
 
-  # gitter:
-  #   image: plugins/gitter
+  gitter:
+    image: umschlag/gitter
