@@ -4,7 +4,7 @@
 [![Coverage Status](http://coverage.dronehippie.de/badges/umschlag/umschlag-ui/coverage.svg)](http://coverage.dronehippie.de/umschlag/umschlag-ui)
 [![](https://images.microbadger.com/badges/image/umschlag/umschlag-ui.svg)](http://microbadger.com/images/umschlag/umschlag-ui "Get your own image badge on microbadger.com")
 [![Join the chat at https://gitter.im/umschlag/umschlag](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/umschlag/umschlag)
-![Release Status](https://img.shields.io/badge/status-beta-yellow.svg?style=flat)
+[![Stories in Ready](https://badge.waffle.io/umschlag/umschlag-api.svg?label=ready&title=Ready)](http://waffle.io/umschlag/umschlag-api)
 
 **This project is under heavy development, it's not in a working state yet!**
 
