@@ -14,12 +14,14 @@ pipeline:
 
   server:
     image: webhippie/golang:latest
-    environment:
-      - GOPATH=/srv/app
     pull: true
+    environment:
+      CGO_ENABLED: 0
+      TAGS:
+      GOPATH: /srv/app
     commands:
       - make clean
-      - make deps
+      - make vet
       - make lint
       - make generate
       - make test
@@ -27,18 +29,70 @@ pipeline:
 
   updater:
     image: webhippie/golang:latest
-    environment:
-      - GOPATH=/srv/app
     pull: true
+    environment:
+      CGO_ENABLED: 0
+      TAGS:
+      GOPATH: /srv/app
     commands:
       - make publish
     when:
       event: [ push, tag ]
-      branch: [ master, refs/tags/* ]
+      branch: [ master, release/*, refs/tags/* ]
 
-  coverage:
-    image: umschlag/coverage
-    server: http://coverage.dronehippie.de
+  # coverage:
+  #   image: plugins/coverage
+  #   server: http://coverage.dronehippie.de
+  #   when:
+  #     event: [ push, tag, pull_request ]
+
+  docker:
+    image: plugins/docker
+    repo: umschlag/umschlag-ui
+    tags: [ '${DRONE_TAG##v}' ]
+    when:
+      event: [ tag ]
+      branch: [ refs/tags/* ]
+
+  docker:
+    image: plugins/docker
+    repo: umschlag/umschlag-ui
+    tags: [ '${DRONE_BRANCH##release/v}' ]
+    when:
+      event: [ push ]
+      branch: [ release/* ]
+
+  docker:
+    image: plugins/docker
+    repo: umschlag/umschlag-ui
+    tags: [ 'latest' ]
+    when:
+      event: [ push ]
+      branch: [ master ]
+
+  # rsync:
+  #   image: plugins/rsync
+  #   user: deploy
+  #   host: dl.webhippie.de
+  #   source: dist/release/
+  #   target: /usr/share/webapps/dl/public_html/umschlag-ui/${DRONE_TAG##v}
+  #   recursive: true
+  #   delete: true
+  #   when:
+  #     event: [ tag ]
+  #     branch: [ refs/tags/* ]
+
+  # rsync:
+  #   image: plugins/rsync
+  #   user: deploy
+  #   host: dl.webhippie.de
+  #   source: dist/release/
+  #   target: /usr/share/webapps/dl/public_html/umschlag-ui/${DRONE_TAG##release/v}
+  #   recursive: true
+  #   delete: true
+  #   when:
+  #     event: [ push ]
+  #     branch: [ release/* ]
 
   # rsync:
   #   image: plugins/rsync
@@ -52,69 +106,13 @@ pipeline:
   #     event: push
   #     branch: master
 
-  # rsync:
-  #   image: plugins/rsync
-  #   user: deploy
-  #   host: dl.webhippie.de
-  #   source: dist/release/
-  #   target: /usr/share/webapps/dl/public_html/umschlag-ui/$$TAG
-  #   recursive: true
-  #   delete: true
-  #   when:
-  #     event: tag
-  #     branch: refs/tags/*
-
-  # rsync:
-  #   image: plugins/rsync
-  #   user: deploy
-  #   host: dl.webhippie.de
-  #   source: dist/latest/
-  #   target: /usr/share/webapps/dl/public_html/umschlag-ui/latest
-  #   recursive: true
-  #   delete: true
-  #   when:
-  #     event: tag
-  #     branch: refs/tags/*
-
-  # rsync:
-  #   image: plugins/rsync
-  #   user: deploy
-  #   host: dl.webhippie.de
-  #   source: dist/publish/
-  #   target: /usr/share/webapps/dl/public_html/umschlag-ui/updates
-  #   recursive: true
-  #   delete: false
-  #   when:
-  #     event: tag
-  #     branch: refs/tags/*
-
-  # github_release:
-  #   image: plugins/github-release
-  #   files:
-  #     - dist/release/*
-  #   when:
-  #     event: tag
-  #     branch: refs/tags/*
-
-  docker:
-    image: plugins/docker
-    storage_driver: overlay
-    debug: true
-    repo: umschlag/umschlag-ui
-    tags: [ '${TAG}' ]
+  github:
+    image: plugins/github-release
+    files:
+      - dist/release/*
     when:
-      event: tag
-      branch: refs/tags/*
-
-  docker:
-    image: plugins/docker
-    storage_driver: overlay
-    debug: true
-    repo: umschlag/umschlag-ui
-    tags: [ 'latest' ]
-    when:
-      event: push
-      branch: master
+      event: [ tag ]
+      branch: [ refs/tags/* ]
 
   gitter:
-    image: umschlag/gitter
+    image: plugins/gitter
