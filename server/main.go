@@ -12,10 +12,11 @@ import (
 	"github.com/urfave/cli"
 )
 
-//go:generate go-bindata -ignore "\\.go" -pkg main -prefix ../ -o bindata.go ../assets/...
+//go:generate go-bindata -ignore "\\.go" -pkg main -o bindata.go ../assets/...
 //go:generate go fmt bindata.go
-//go:generate sed -i "s/Html/HTML/" bindata.go
-//go:generate sed -i "s/Css/CSS/" bindata.go
+//go:generate sed -i.bak "s/Html/HTML/" bindata.go
+//go:generate sed -i.bak "s/Css/CSS/" bindata.go
+//go:generate rm -f bindata.go.bak
 
 func main() {
 	runtime.GOMAXPROCS(runtime.NumCPU())
