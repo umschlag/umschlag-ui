@@ -34,7 +34,7 @@ update:
 .PHONY: clean
 clean:
 	go clean -i ./...
-	rm -rf $(EXECUTABLE) $(DIST)
+	rm -rf $(EXECUTABLE) $(DIST) server/bindata.go
 
 .PHONY: fmt
 fmt:

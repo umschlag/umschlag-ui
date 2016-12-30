@@ -1,15 +1,17 @@
 package main
 
 type server struct {
-	Addr     string
-	Cert     string
-	Key      string
-	Root     string
-	Endpoint string
+	Host        string
+	Addr        string
+	Cert        string
+	Key         string
+	Root        string
+	Endpoint    string
+	Storage     string
+	LetsEncrypt bool
 }
 
 type config struct {
-	Update bool
 	Debug  bool
 	Server *server
 }
