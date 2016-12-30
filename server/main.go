@@ -1,15 +1,20 @@
 package main
 
 import (
+	"crypto/tls"
 	"net/http"
+	"net/url"
 	"os"
 	"path"
 	"runtime"
+	"time"
 
 	"github.com/Sirupsen/logrus"
 	"github.com/elazarl/go-bindata-assetfs"
+	"github.com/facebookgo/grace/gracehttp"
 	"github.com/gin-gonic/gin"
 	"github.com/urfave/cli"
+	"golang.org/x/crypto/acme/autocert"
 )
 
 //go:generate go-bindata -ignore "\\.go" -pkg main -o bindata.go ../assets/...
@@ -28,12 +33,6 @@ func main() {
 	app.Usage = "A docker distribution management system"
 
 	app.Flags = []cli.Flag{
-		cli.BoolTFlag{
-			Name:        "update, u",
-			Usage:       "Enable auto update",
-			EnvVar:      "UMSCHLAG_UPDATE",
-			Destination: &Config.Debug,
-		},
 		cli.BoolFlag{
 			Name:        "debug",
 			Usage:       "Activate debug information",
@@ -51,10 +50,6 @@ func main() {
 			logrus.SetLevel(logrus.InfoLevel)
 		}
 
-		if Config.Update {
-			Update()
-		}
-
 		return nil
 	}
 
@@ -64,25 +59,18 @@ func main() {
 			Usage: "Start the Umschlag UI",
 			Flags: []cli.Flag{
 				cli.StringFlag{
+					Name:        "host",
+					Value:       "http://localhost:9000",
+					Usage:       "External access to the UI",
+					EnvVar:      "KLEISTER_UI_HOST",
+					Destination: &Config.Server.Host,
+				},
+				cli.StringFlag{
 					Name:        "addr",
 					Value:       ":9000",
 					Usage:       "Address to bind the server",
 					EnvVar:      "UMSCHLAG_UI_ADDR",
 					Destination: &Config.Server.Addr,
-				},
-				cli.StringFlag{
-					Name:        "cert",
-					Value:       "",
-					Usage:       "Path to SSL cert",
-					EnvVar:      "UMSCHLAG_UI_CERT",
-					Destination: &Config.Server.Cert,
-				},
-				cli.StringFlag{
-					Name:        "key",
-					Value:       "",
-					Usage:       "Path to SSL key",
-					EnvVar:      "UMSCHLAG_UI_KEY",
-					Destination: &Config.Server.Key,
 				},
 				cli.StringFlag{
 					Name:        "root",
@@ -97,6 +85,33 @@ func main() {
 					Usage:       "URL for the API server",
 					EnvVar:      "UMSCHLAG_UI_ENDPOINT",
 					Destination: &Config.Server.Endpoint,
+				},
+				cli.StringFlag{
+					Name:        "storage",
+					Value:       "storage/",
+					Usage:       "Folder for storing assets",
+					EnvVar:      "KLEISTER_UI_STORAGE",
+					Destination: &Config.Server.Storage,
+				},
+				cli.StringFlag{
+					Name:        "ssl-cert",
+					Value:       "",
+					Usage:       "Path to SSL cert",
+					EnvVar:      "KLEISTER_SSL_CERT",
+					Destination: &Config.Server.Cert,
+				},
+				cli.StringFlag{
+					Name:        "ssl-key",
+					Value:       "",
+					Usage:       "Path to SSL key",
+					EnvVar:      "KLEISTER_SSL_KEY",
+					Destination: &Config.Server.Key,
+				},
+				cli.BoolFlag{
+					Name:        "ssl-letsencrypt",
+					Usage:       "Enable Let's Encrypt SSL",
+					EnvVar:      "KLEISTER_SSL_LETSENCRYPT",
+					Destination: &Config.Server.LetsEncrypt,
 				},
 			},
 			Action: func(c *cli.Context) {
@@ -132,22 +147,78 @@ func main() {
 				e.GET(Config.Server.Root, Index)
 				e.NoRoute(Index)
 
-				if Config.Server.Cert != "" && Config.Server.Key != "" {
-					logrus.Fatal(
-						http.ListenAndServeTLS(
-							Config.Server.Addr,
+				var (
+					server *http.Server
+				)
+
+				if Config.Server.LetsEncrypt || (Config.Server.Cert != "" && Config.Server.Key != "") {
+					curves := []tls.CurveID{
+						tls.CurveP521,
+						tls.CurveP384,
+						tls.CurveP256,
+					}
+
+					ciphers := []uint16{
+						tls.TLS_ECDHE_ECDSA_WITH_AES_256_GCM_SHA384,
+						tls.TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384,
+						tls.TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256,
+						tls.TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256,
+					}
+
+					cfg := &tls.Config{
+						PreferServerCipherSuites: true,
+						MinVersion:               tls.VersionTLS12,
+						CurvePreferences:         curves,
+						CipherSuites:             ciphers,
+					}
+
+					if Config.Server.LetsEncrypt {
+						parsed, err := url.Parse(Config.Server.Host)
+
+						if err != nil {
+							logrus.Fatal("Failed to parse host name. %s", err)
+						}
+
+						certManager := autocert.Manager{
+							Prompt:     autocert.AcceptTOS,
+							HostPolicy: autocert.HostWhitelist(parsed.Host),
+							Cache:      autocert.DirCache(Config.Server.Storage),
+						}
+
+						cfg.GetCertificate = certManager.GetCertificate
+					} else {
+						cert, err := tls.LoadX509KeyPair(
 							Config.Server.Cert,
 							Config.Server.Key,
-							e,
-						),
-					)
+						)
+
+						if err != nil {
+							logrus.Fatal("Failed to load SSL certificates. %s", err)
+						}
+
+						cfg.Certificates = []tls.Certificate{
+							cert,
+						}
+					}
+
+					server = &http.Server{
+						Addr:         Config.Server.Addr,
+						Handler:      e,
+						ReadTimeout:  5 * time.Second,
+						WriteTimeout: 10 * time.Second,
+						TLSConfig:    cfg,
+					}
 				} else {
-					logrus.Fatal(
-						http.ListenAndServe(
-							Config.Server.Addr,
-							e,
-						),
-					)
+					server = &http.Server{
+						Addr:         Config.Server.Addr,
+						Handler:      e,
+						ReadTimeout:  5 * time.Second,
+						WriteTimeout: 10 * time.Second,
+					}
+				}
+
+				if err := gracehttp.Serve(server); err != nil {
+					logrus.Fatal(err)
 				}
 			},
 		},

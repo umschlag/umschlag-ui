@@ -2,6 +2,7 @@ FROM alpine:edge
 MAINTAINER Thomas Boerger <thomas@webhippie.de>
 
 EXPOSE 9000
+VOLUME ["/var/lib/umschlag"]
 
 RUN apk update && \
   apk add \
@@ -13,13 +14,15 @@ RUN apk update && \
     -g 1000 \
     umschlag && \
   adduser -D \
-    -h /home/umschlag \
+    -h /var/lib/umschlag \
     -s /bin/bash \
     -G umschlag \
     -u 1000 \
     umschlag
 
 COPY bin/umschlag-ui /usr/bin/
+
+ENV UMSCHLAG_UI_STORAGE /var/lib/umschlag
 
 USER umschlag
 ENTRYPOINT ["/usr/bin/umschlag-ui"]
