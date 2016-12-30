@@ -1,39 +1,41 @@
 vendors:
 - path: github.com/Sirupsen/logrus
-  rev: a283a10442df8dc09befd873fab202bf8a253d6a
-- path: github.com/davecgh/go-spew
-  rev: 5215b55f46b2b919f50a1df0eaa5886afe4e3b3d
+  rev: 881bee4e20a5d11a6a88a5667c6f292072ac1963
 - path: github.com/elazarl/go-bindata-assetfs
-  rev: 57eb5e1fc594ad4b0b1dbea7b286d299e0cb43c2
+  rev: 9a6736ed45b44bf3835afeebb3034b57ed329f3e
+- path: github.com/facebookgo/clock
+  rev: 600d898af40aa09a7a93ecb9265d87b0504b6f03
+- path: github.com/facebookgo/grace
+  rev: 5729e484473f52048578af1b80d0008c7024089b
+- path: github.com/facebookgo/httpdown
+  rev: a3b1354551a26449fbe05f5d855937f6e7acbd71
+- path: github.com/facebookgo/stats
+  rev: 1b76add642e42c6ffba7211ad7b3939ce654526e
 - path: github.com/gin-gonic/gin
-  rev: f931d1ea80ae95a6fc739213cdd9399bd2967fb6
+  rev: e2212d40c62a98b388a5eb48ecbdcf88534688ba
 - path: github.com/golang/protobuf
-  rev: 874264fbbb43f4d91e999fecb4b40143ed611400
+  rev: 8ee79997227bf9b34611aee7946ae64735e6fd93
 - path: github.com/kardianos/osext
   rev: 29ae4ffbc9a6fe9fb2bc5029050ce6996ea1d3bc
 - path: github.com/kr/binarydist
   rev: 3035450ff8b987ec4373f65c40767f096b35f2d2
 - path: github.com/manucorporat/sse
   rev: ee05b128a739a0fb76c7ebd3ae4810c1de808d6d
-- path: github.com/pmezard/go-difflib
-  rev: 792786c7400a136282c1664665ae0a8db921c6c2
+- path: github.com/mattn/go-isatty
+  rev: 30a891c33c7cde7b02a981314b4228ec99380cca
 - path: github.com/sanbornm/go-selfupdate
   rev: 8d409ca53a740932c8e3a6cd1d8ea4c111f5e539
-- path: github.com/stretchr/testify
-  rev: d77da356e56a7428ad25149ca77381849a6a5232
 - path: github.com/urfave/cli
-  rev: 11c134509d89c2018675f369955218a180dc7428
+  rev: 0bdeddeeb0f650497d603c4ad7b20cfe685682f6
+- path: golang.org/x/crypto
+  rev: f6b343c37ca80bfa8ea539da67a0b621f84fab1d
 - path: golang.org/x/net
-  rev: 4d38db76854b199960801a1734443fd02870d7e1
+  rev: 8fd7f25955530b92e73e9e1932a41b522b22ccd9
 - path: golang.org/x/sys
-  rev: a646d33e2ee3172a661fc09bca23bb4889a41bc8
-- path: gopkg.in/check.v1
-  rev: 4f90aeace3a26ad7021961c297b22c42160c7b25
-- path: gopkg.in/go-playground/assert.v1
-  rev: 4f4dfbc7d1c48336cf93399deae81aa9067e88af
+  rev: d75a52659825e75fff6158388dddc6a5b04f9ba5
 - path: gopkg.in/go-playground/validator.v8
   rev: 5f57d2222ad794d0dffb07e664ea05e2ee07d60c
 - path: gopkg.in/inconshreveable/go-update.v0
   rev: d8b0b1d421aa1cbf392c05869f8abbc669bb7066
 - path: gopkg.in/yaml.v2
-  rev: e4d366fc3c7938e2958e662b4258c7a89e1f0e3e
+  rev: a5b47d31c556af34a302ce5d659e6fea44d90de0
