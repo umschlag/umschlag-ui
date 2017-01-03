@@ -11,7 +11,6 @@ import (
 
 	"github.com/Sirupsen/logrus"
 	"github.com/elazarl/go-bindata-assetfs"
-	"github.com/facebookgo/grace/gracehttp"
 	"github.com/gin-gonic/gin"
 	"github.com/urfave/cli"
 	"golang.org/x/crypto/acme/autocert"
@@ -217,7 +216,7 @@ func main() {
 					}
 				}
 
-				if err := gracehttp.Serve(server); err != nil {
+				if err := startServer(server); err != nil {
 					logrus.Fatal(err)
 				}
 			},
