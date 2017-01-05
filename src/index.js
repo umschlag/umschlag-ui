@@ -1,29 +1,33 @@
-import './index.less';
+import Vue from 'vue';
+import VueResource from 'vue-resource';
+import { sync } from 'vuex-router-sync';
 
-import React from 'react';
-import ReactDOM from 'react-dom';
-import superagent from 'superagent';
-import { root } from 'baobab-react/higher-order';
-import { Router, browserHistory } from 'react-router';
-import { events } from './actions/events';
-import { tree } from './actions/tree';
-import { routes } from './routes';
+import store from './store';
+import router from './router';
+import App from './app.vue';
+import * as filters from './filters';
 
+Vue.use(VueResource);
 
-window.tree = tree;
-window.events = events;
-
-class App extends React.Component {
-  render() {
-    return (
-      <Router history={browserHistory}>
-        {routes}
-      </Router>
-    );
-  }
-}
-
-ReactDOM.render(
-  React.createElement(root(tree, App)),
-  document.getElementById('umschlag')
+sync(
+  store,
+  router,
 );
+
+Object.keys(filters).forEach((key) => {
+  Vue.filter(key, filters[key]);
+});
+
+new Vue({
+  // http: {
+  //   root: '/root',
+  //   headers: {
+  //     Authorization: 'Basic YXBpOnBhc3N3b3Jk'
+  //   }
+  // },
+
+  el: '#app',
+  store,
+  router,
+  render: h => h(App),
+});

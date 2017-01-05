@@ -13,10 +13,18 @@ module.exports = {
   output: {
     path: require('path').resolve(__dirname, 'assets'),
     filename: 'scripts/umschlag.js',
-    publicPath: '/'
+    publicPath: ''
   },
 
   devtool: 'source-map',
+
+  resolve: {
+    extensions: [
+      '',
+      '.js',
+      '.vue'
+    ]
+  },
 
   module: {
     loaders: [
@@ -26,7 +34,6 @@ module.exports = {
         loader: 'babel',
         query: {
           presets: [
-            'react',
             'es2015'
           ]
         }
@@ -36,6 +43,10 @@ module.exports = {
         loader: ExtractTextPlugin.extract(
           'css?sourceMap!less?sourceMap'
         )
+      },
+      {
+        test: /\.vue$/,
+        loader: 'vue'
       },
       {
         test: /index\.html$/,
@@ -60,12 +71,10 @@ module.exports = {
     ]
   },
 
-  resolve: {
-    extensions: [
-      '',
-      '.js',
-      '.jsx'
-    ]
+  vue: {
+    loaders: {
+      css: ExtractTextPlugin.extract("css!less"),
+    }
   },
 
   plugins: [
