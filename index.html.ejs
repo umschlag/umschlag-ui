@@ -3,27 +3,27 @@
 <html lang="en">
   <head>
     <% if (htmlWebpackPlugin.options.goTemplate) { %>
-      <base href="{{ .Root }}" />
+      <base href="{{ .Root }}">
     <% } else { %>
-      <base href="/" />
+      <base href="/">
     <% } %>
 
-    <meta charset="utf-8" />
-    <meta content="width=device-width, initial-scale=1" name="viewport" />
-    <meta content="IE=edge" http-equiv="X-UA-Compatible" />
+    <meta charset="utf-8">
+    <meta content="width=device-width, initial-scale=1, shrink-to-fit=no" name="viewport">
+    <meta content="IE=edge" http-equiv="X-UA-Compatible">
 
-    <meta content="A docker distribution management system" name="description" />
-    <meta content="Umschlag Team" name="author" />
+    <meta content="A docker distribution management system" name="description">
+    <meta content="Umschlag Team" name="author">
 
     <title>Umschlag</title>
-    <link href="/images/favicon.ico" rel="icon" type="image/x-icon" />
+    <link href="images/favicon.ico" rel="icon" type="image/x-icon">
 
     <% for (var i = 0; i < htmlWebpackPlugin.files.css.length; i++) { %>
-      <link href="<%= htmlWebpackPlugin.files.css[i] %>" rel="stylesheet" />
+      <link href="<%= htmlWebpackPlugin.files.css[i] %>" rel="stylesheet">
     <% } %>
   </head>
   <body role="document">
-    <div id="umschlag"></div>
+    <div id="app"></div>
 
     <% if (htmlWebpackPlugin.options.goTemplate) { %>
       <script>

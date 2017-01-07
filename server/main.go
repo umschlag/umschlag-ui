@@ -2,25 +2,20 @@ package main
 
 import (
 	"crypto/tls"
+	"fmt"
 	"net/http"
 	"net/url"
 	"os"
-	"path"
 	"runtime"
 	"time"
 
 	"github.com/Sirupsen/logrus"
-	"github.com/elazarl/go-bindata-assetfs"
 	"github.com/gin-gonic/gin"
 	"github.com/urfave/cli"
 	"golang.org/x/crypto/acme/autocert"
 )
 
-//go:generate go-bindata -ignore "\\.go" -pkg main -o bindata.go ../assets/...
-//go:generate go fmt bindata.go
-//go:generate sed -i.bak "s/Html/HTML/" bindata.go
-//go:generate sed -i.bak "s/Css/CSS/" bindata.go
-//go:generate rm -f bindata.go.bak
+//go:generate fileb0x ab0x.yaml
 
 func main() {
 	runtime.GOMAXPROCS(runtime.NumCPU())
@@ -131,19 +126,11 @@ func main() {
 				e.Use(SetLogger())
 				e.Use(SetRecovery())
 
-				for _, folder := range []string{"fonts", "images", "scripts", "styles"} {
-					e.StaticFS(
-						path.Join(Config.Server.Root, folder),
-						&assetfs.AssetFS{
-							Asset:     Asset,
-							AssetDir:  AssetDir,
-							AssetInfo: AssetInfo,
-							Prefix:    path.Join("assets", folder),
-						},
-					)
-				}
+				e.StaticFS(
+					Config.Server.Root,
+					HTTP,
+				)
 
-				e.GET(Config.Server.Root, Index)
 				e.NoRoute(Index)
 
 				var (
@@ -233,5 +220,8 @@ func main() {
 		Usage: "Print the current version of that tool",
 	}
 
-	app.Run(os.Args)
+	if err := app.Run(os.Args); err != nil {
+		fmt.Println(err)
+		os.Exit(1)
+	}
 }

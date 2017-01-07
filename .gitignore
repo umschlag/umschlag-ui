@@ -31,4 +31,4 @@ coverage.out
 /node_modules
 /assets
 
-/server/bindata.go
+/server/ab0x.go
