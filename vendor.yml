@@ -1,6 +1,6 @@
 vendors:
 - path: github.com/Sirupsen/logrus
-  rev: 881bee4e20a5d11a6a88a5667c6f292072ac1963
+  rev: 9b48ece7fc373043054858f8c0d362665e866004
 - path: github.com/elazarl/go-bindata-assetfs
   rev: 9a6736ed45b44bf3835afeebb3034b57ed329f3e
 - path: github.com/facebookgo/clock
@@ -15,27 +15,19 @@ vendors:
   rev: e2212d40c62a98b388a5eb48ecbdcf88534688ba
 - path: github.com/golang/protobuf
   rev: 8ee79997227bf9b34611aee7946ae64735e6fd93
-- path: github.com/kardianos/osext
-  rev: 29ae4ffbc9a6fe9fb2bc5029050ce6996ea1d3bc
-- path: github.com/kr/binarydist
-  rev: 3035450ff8b987ec4373f65c40767f096b35f2d2
 - path: github.com/manucorporat/sse
   rev: ee05b128a739a0fb76c7ebd3ae4810c1de808d6d
 - path: github.com/mattn/go-isatty
   rev: 30a891c33c7cde7b02a981314b4228ec99380cca
-- path: github.com/sanbornm/go-selfupdate
-  rev: 8d409ca53a740932c8e3a6cd1d8ea4c111f5e539
 - path: github.com/urfave/cli
   rev: 0bdeddeeb0f650497d603c4ad7b20cfe685682f6
 - path: golang.org/x/crypto
-  rev: f6b343c37ca80bfa8ea539da67a0b621f84fab1d
+  rev: cb497ae8f18e3c55f81bc9f3876c8f4c3d8a2813
 - path: golang.org/x/net
-  rev: 8fd7f25955530b92e73e9e1932a41b522b22ccd9
+  rev: ae05321a78c1401cec22ba7bc203b597ea372496
 - path: golang.org/x/sys
   rev: d75a52659825e75fff6158388dddc6a5b04f9ba5
 - path: gopkg.in/go-playground/validator.v8
   rev: 5f57d2222ad794d0dffb07e664ea05e2ee07d60c
-- path: gopkg.in/inconshreveable/go-update.v0
-  rev: d8b0b1d421aa1cbf392c05869f8abbc669bb7066
 - path: gopkg.in/yaml.v2
   rev: a5b47d31c556af34a302ce5d659e6fea44d90de0
