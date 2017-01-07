@@ -21,11 +21,13 @@ func Index(c *gin.Context) {
 
 // Template loads the template to make it parseable.
 func Template() *template.Template {
+  file, _ := ReadFile("index.html")
+
 	return template.Must(
 		template.New(
 			"index.html",
 		).Parse(
-			string(MustAsset("assets/index.html")),
+			string(file),
 		),
 	)
 }

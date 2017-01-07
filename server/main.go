@@ -11,17 +11,12 @@ import (
 	"time"
 
 	"github.com/Sirupsen/logrus"
-	"github.com/elazarl/go-bindata-assetfs"
 	"github.com/gin-gonic/gin"
 	"github.com/urfave/cli"
 	"golang.org/x/crypto/acme/autocert"
 )
 
-//go:generate go-bindata -ignore "\\.go" -pkg main -o bindata.go ../assets/...
-//go:generate go fmt bindata.go
-//go:generate sed -i.bak "s/Html/HTML/" bindata.go
-//go:generate sed -i.bak "s/Css/CSS/" bindata.go
-//go:generate rm -f bindata.go.bak
+//go:generate fileb0x ab0x.yaml
 
 func main() {
 	runtime.GOMAXPROCS(runtime.NumCPU())
@@ -132,19 +127,11 @@ func main() {
 				e.Use(SetLogger())
 				e.Use(SetRecovery())
 
-				for _, folder := range []string{"fonts", "images", "scripts", "styles"} {
-					e.StaticFS(
-						path.Join(Config.Server.Root, folder),
-						&assetfs.AssetFS{
-							Asset:     Asset,
-							AssetDir:  AssetDir,
-							AssetInfo: AssetInfo,
-							Prefix:    path.Join("assets", folder),
-						},
-					)
-				}
+				e.StaticFS(
+					Config.Server.Root,
+					HTTP,
+				)
 
-				e.GET(Config.Server.Root, Index)
 				e.NoRoute(Index)
 
 				var (
