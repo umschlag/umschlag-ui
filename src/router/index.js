@@ -1,10 +1,10 @@
-import Vue from 'vue';
-import VueRouter from 'vue-router';
+import Vue from 'vue'
+import VueRouter from 'vue-router'
 
-import DashboardView from '../views/dashboard.vue';
-import ProfileView from '../views/profile.vue';
+import DashboardView from '../views/dashboard.vue'
+import ProfileView from '../views/profile.vue'
 
-Vue.use(VueRouter);
+Vue.use(VueRouter)
 
 export default new VueRouter({
   mode: 'history',
@@ -12,6 +12,6 @@ export default new VueRouter({
   scrollBehavior: () => ({ y: 0 }),
   routes: [
      { path: '/profile', component: ProfileView },
-     { path: '/', component: DashboardView },
-  ],
-});
+     { path: '/', component: DashboardView }
+  ]
+})

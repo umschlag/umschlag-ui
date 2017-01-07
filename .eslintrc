@@ -1,7 +1,6 @@
 {
-    "extends": "airbnb",
+    "extends": "vue",
     "plugins": [],
     "rules": {
-        "no-new": 0
     }
 }

@@ -1,43 +1,41 @@
-/* eslint no-param-reassign: ["error", { "props": false }] */
+import Vue from 'vue'
+import Vuex from 'vuex'
 
-import Vue from 'vue';
-import Vuex from 'vuex';
-
-Vue.use(Vuex);
+Vue.use(Vuex)
 
 const state = {
-  count: 0,
-};
+  count: 0
+}
 
 const mutations = {
-  increment(currState) {
-    currState.count += 1;
+  increment (currState) {
+    currState.count += 1
   },
-  decrement(currState) {
-    currState.count -= 1;
-  },
-};
+  decrement (currState) {
+    currState.count -= 1
+  }
+}
 
 const actions = {
   increment: ({ commit }) => commit('increment'),
   decrement: ({ commit }) => commit('decrement'),
-  incrementAsync({ commit }) {
+  incrementAsync ({ commit }) {
     return new Promise((resolve) => {
       setTimeout(() => {
-        commit('increment');
-        resolve();
-      }, 1000);
-    });
-  },
-};
+        commit('increment')
+        resolve()
+      }, 1000)
+    })
+  }
+}
 
 const getters = {
-  evenOrOdd: currState => (currState.count % 2 === 0 ? 'even' : 'odd'),
-};
+  evenOrOdd: currState => (currState.count % 2 === 0 ? 'even' : 'odd')
+}
 
 export default new Vuex.Store({
   state,
   getters,
   actions,
-  mutations,
-});
+  mutations
+})

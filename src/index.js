@@ -1,22 +1,22 @@
-import Vue from 'vue';
-import VueResource from 'vue-resource';
-import { sync } from 'vuex-router-sync';
+import Vue from 'vue'
+import VueResource from 'vue-resource'
+import { sync } from 'vuex-router-sync'
 
-import store from './store';
-import router from './router';
-import App from './app.vue';
-import * as filters from './filters';
+import store from './store'
+import router from './router'
+import App from './app.vue'
+import * as filters from './filters'
 
-Vue.use(VueResource);
+Vue.use(VueResource)
 
 sync(
   store,
-  router,
-);
+  router
+)
 
 Object.keys(filters).forEach((key) => {
-  Vue.filter(key, filters[key]);
-});
+  Vue.filter(key, filters[key])
+})
 
 new Vue({
   // http: {
@@ -29,5 +29,5 @@ new Vue({
   el: '#app',
   store,
   router,
-  render: h => h(App),
-});
+  render: h => h(App)
+})
