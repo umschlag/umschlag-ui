@@ -11,6 +11,7 @@ import (
 
 	"github.com/Sirupsen/logrus"
 	"github.com/gin-gonic/gin"
+	"github.com/joho/godotenv"
 	"github.com/urfave/cli"
 	"golang.org/x/crypto/acme/autocert"
 )
@@ -19,6 +20,10 @@ import (
 
 func main() {
 	runtime.GOMAXPROCS(runtime.NumCPU())
+
+	if env := os.Getenv("UMSCHLAG_ENV_FILE"); env != "" {
+		godotenv.Load(env)
+	}
 
 	app := cli.NewApp()
 	app.Name = "umschlag-ui"
