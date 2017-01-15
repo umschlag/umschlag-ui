@@ -1,8 +1,6 @@
 vendors:
 - path: github.com/Sirupsen/logrus
   rev: 61e43dc76f7ee59a82bdf3d71033dc12bea4c77d
-- path: github.com/elazarl/go-bindata-assetfs
-  rev: 9a6736ed45b44bf3835afeebb3034b57ed329f3e
 - path: github.com/facebookgo/clock
   rev: 600d898af40aa09a7a93ecb9265d87b0504b6f03
 - path: github.com/facebookgo/grace
@@ -15,6 +13,8 @@ vendors:
   rev: e2212d40c62a98b388a5eb48ecbdcf88534688ba
 - path: github.com/golang/protobuf
   rev: 8ee79997227bf9b34611aee7946ae64735e6fd93
+- path: github.com/joho/godotenv
+  rev: 726cc8b906e3d31c70a9671c90a13716a8d3f50d
 - path: github.com/manucorporat/sse
   rev: ee05b128a739a0fb76c7ebd3ae4810c1de808d6d
 - path: github.com/mattn/go-isatty
