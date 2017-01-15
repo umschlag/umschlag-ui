@@ -20,7 +20,7 @@ Object.keys(filters).forEach((key) => {
 
 new Vue({
   http: {
-    root: window.INITIAL_STATE['api'],
+    root: window.INITIAL_STATE['api']
   },
 
   el: '#app',

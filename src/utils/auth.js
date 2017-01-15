@@ -5,15 +5,15 @@ const LOGOUT_URL = '/auth/logout'
 
 export default {
   user: {
-    authenticated: false,
+    authenticated: false
   },
 
-  login(context, creds, redirect) {
+  login (context, creds, redirect) {
     context.$http.post(LOGIN_URL, creds, (data) => {
       localStorage.setItem('token', data.token)
       this.user.authenticated = true
 
-      if(redirect) {
+      if (redirect) {
         router.go(redirect)
       }
     }).error((err) => {
@@ -21,7 +21,7 @@ export default {
     })
   },
 
-  logout(context) {
+  logout (context) {
     context.$http.get(LOGOUT_URL, (data) => {
       localStorage.removeItem('token')
       this.user.authenticated = false
@@ -30,7 +30,7 @@ export default {
     })
   },
 
-  check(context) {
+  check (context) {
     var jwt = localStorage.getItem('token')
 
     if (jwt) {
@@ -40,7 +40,7 @@ export default {
     }
   },
 
-  header(context) {
+  header (context) {
     return {
       'Authorization': 'Bearer ' + localStorage.getItem('token')
     }
