@@ -19,12 +19,9 @@ Object.keys(filters).forEach((key) => {
 })
 
 new Vue({
-  // http: {
-  //   root: '/root',
-  //   headers: {
-  //     Authorization: 'Basic YXBpOnBhc3N3b3Jk'
-  //   }
-  // },
+  http: {
+    root: window.INITIAL_STATE['api'],
+  },
 
   el: '#app',
   store,

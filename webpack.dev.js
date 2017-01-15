@@ -32,7 +32,11 @@ if (token == null) {
   var params = {
     target: url,
     headers: {
-      'Authorization': `Bearer ${token}`
+      'Authorization': `Bearer ${token}`,
+      'Access-Control-Allow-Origin': '*',
+      'Access-Control-Allow-Credentials': 'true',
+      'Access-Control-Allow-Headers': 'Content-Type, Authorization, x-id, Content-Length, X-Requested-With',
+      'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS'
     },
     xfwd: true,
     changeOrigin: true
@@ -45,6 +49,12 @@ const server = new WebpackDevServer(compiler, {
   historyApiFallback: true,
   proxy: {
     '/api/*': params
+  },
+  headers: {
+    'Access-Control-Allow-Origin': '*',
+    'Access-Control-Allow-Credentials': 'true',
+    'Access-Control-Allow-Headers': 'Content-Type, Authorization, x-id, Content-Length, X-Requested-With',
+    'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS'
   },
   stats: {
     assets: false,

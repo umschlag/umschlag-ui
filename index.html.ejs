@@ -27,11 +27,11 @@
 
     <% if (htmlWebpackPlugin.options.goTemplate) { %>
       <script>
-        window.STATE_FROM_SERVER = { base: "{{ .Root }}", api: "{{ .Endpoint }}" };
+        window.INITIAL_STATE = { base: "{{ .Root }}", api: "{{ .Endpoint }}" };
       </script>
     <% } else { %>
       <script>
-        window.STATE_FROM_SERVER = { base: "/", api: "" };
+        window.INITIAL_STATE = { base: "/", api: "" };
       </script>
     <% } %>
 
