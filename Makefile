@@ -13,7 +13,7 @@ LDFLAGS += -s -w -extldflags "-static" -X "$(IMPORT)/main.VersionDev=$(SHA)" -X 
 
 TARGETS ?= linux/*,darwin/*,windows/*
 PACKAGES ?= $(shell go list ./server/... | grep -v /vendor/)
-SOURCES ?= $(shell find . -name "*.go" -type f)
+SOURCES ?= $(shell find . -name "*.go" -type f -not -path "./vendor/*")
 
 TAGS ?=
 
@@ -44,7 +44,7 @@ clean:
 
 .PHONY: fmt
 fmt:
-	go fmt $(PACKAGES)
+	gofmt -s -w $(SOURCES)
 
 .PHONY: vet
 vet:
