@@ -55,7 +55,7 @@ func main() {
 	}
 
 	app.Commands = []cli.Command{
-		cli.Command{
+		{
 			Name:  "server",
 			Usage: "Start the Umschlag UI",
 			Flags: []cli.Flag{
