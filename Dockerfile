@@ -20,7 +20,7 @@ RUN apk update && \
     -u 1000 \
     umschlag
 
-COPY bin/umschlag-ui /usr/bin/
+COPY umschlag-ui /usr/bin/
 
 ENV UMSCHLAG_UI_STORAGE /var/lib/umschlag
 
