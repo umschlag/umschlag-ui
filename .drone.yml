@@ -22,9 +22,9 @@ pipeline:
     image: webhippie/golang:latest
     pull: true
     environment:
-      CGO_ENABLED: 0
-      TAGS:
-      GOPATH: /srv/app
+      - CGO_ENABLED=0
+      - TAGS=
+      - GOPATH=/srv/app
     commands:
       - make clean
       - make vet
@@ -37,9 +37,9 @@ pipeline:
     image: webhippie/golang:latest
     pull: true
     environment:
-      CGO_ENABLED: 0
-      TAGS:
-      GOPATH: /srv/app
+      - CGO_ENABLED=0
+      - TAGS=
+      - GOPATH=/srv/app
     commands:
       - make publish
     when:
