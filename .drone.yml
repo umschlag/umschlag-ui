@@ -26,7 +26,6 @@ pipeline:
       - TAGS=
       - GOPATH=/srv/app
     commands:
-      - make clean
       - make vet
       - make lint
       - make generate
