@@ -29,6 +29,5 @@ coverage.out
 
 /dist
 /node_modules
-/assets
 
 /server/ab0x.go

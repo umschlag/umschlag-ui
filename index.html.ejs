@@ -2,12 +2,6 @@
 
 <html lang="en">
   <head>
-    <% if (htmlWebpackPlugin.options.goTemplate) { %>
-      <base href="{{ .Root }}">
-    <% } else { %>
-      <base href="/">
-    <% } %>
-
     <meta charset="utf-8">
     <meta content="width=device-width, initial-scale=1, shrink-to-fit=no" name="viewport">
     <meta content="IE=edge" http-equiv="X-UA-Compatible">
@@ -16,7 +10,7 @@
     <meta content="Umschlag Team" name="author">
 
     <title>Umschlag</title>
-    <link href="images/favicon.ico" rel="icon" type="image/x-icon">
+    <link href="/assets/images/favicon.ico" rel="icon" type="image/x-icon">
 
     <% for (var i = 0; i < htmlWebpackPlugin.files.css.length; i++) { %>
       <link href="<%= htmlWebpackPlugin.files.css[i] %>" rel="stylesheet">
@@ -27,11 +21,11 @@
 
     <% if (htmlWebpackPlugin.options.goTemplate) { %>
       <script>
-        window.INITIAL_STATE = { base: "{{ .Root }}", api: "{{ .Endpoint }}" };
+        window.INITIAL_STATE = { api: "{{ .Endpoint }}" };
       </script>
     <% } else { %>
       <script>
-        window.INITIAL_STATE = { base: "/", api: "" };
+        window.INITIAL_STATE = { api: "" };
       </script>
     <% } %>
 

@@ -5,10 +5,11 @@ type server struct {
 	Addr        string
 	Cert        string
 	Key         string
-	Root        string
 	Endpoint    string
+	Static      string
 	Storage     string
 	LetsEncrypt bool
+	Pprof       bool
 }
 
 type config struct {
