@@ -3,6 +3,12 @@ workspace:
   path: src/github.com/umschlag/umschlag-ui
 
 pipeline:
+  restore:
+    image: jmccann/drone-s3-cache
+    secrets: [ cache_s3_server, cache_s3_access_key, cache_s3_secret_key ]
+    pull: true
+    restore: true
+
   testing:
     image: webhippie/nodejs:latest
     pull: true
@@ -40,14 +46,22 @@ pipeline:
       event: [ push, tag ]
       branch: [ master, release/*, refs/tags/* ]
 
-  # coverage:
-  #   image: plugins/coverage
-  #   server: http://coverage.dronehippie.de
-  #   when:
-  #     event: [ push, tag, pull_request ]
+  rebuild:
+    image: jmccann/drone-s3-cache
+    secrets: [ cache_s3_server, cache_s3_access_key, cache_s3_secret_key ]
+    rebuild: true
+    mount:
+      - node_modules
+
+  flush:
+    image: jmccann/drone-s3-cache
+    secrets: [ cache_s3_server, cache_s3_access_key, cache_s3_secret_key ]
+    flush: true
+    flush_age: 14
 
   docker:
     image: plugins/docker
+    secrets: [ docker_username, docker_password ]
     repo: umschlag/umschlag-ui
     tags: [ '${DRONE_TAG##v}' ]
     when:
@@ -56,6 +70,7 @@ pipeline:
 
   docker:
     image: plugins/docker
+    secrets: [ docker_username, docker_password ]
     repo: umschlag/umschlag-ui
     tags: [ '${DRONE_BRANCH##release/v}' ]
     when:
@@ -64,50 +79,49 @@ pipeline:
 
   docker:
     image: plugins/docker
+    secrets: [ docker_username, docker_password ]
     repo: umschlag/umschlag-ui
     tags: [ 'latest' ]
     when:
       event: [ push ]
       branch: [ master ]
 
-  # rsync:
-  #   image: plugins/rsync
-  #   user: deploy
-  #   host: dl.webhippie.de
-  #   source: dist/release/
-  #   target: /usr/share/webapps/dl/public_html/umschlag-ui/${DRONE_TAG##v}
-  #   recursive: true
-  #   delete: true
-  #   when:
-  #     event: [ tag ]
-  #     branch: [ refs/tags/* ]
+  archive:
+    image: plugins/s3
+    secrets: [ s3_endpoint, aws_access_key_id, aws_secret_access_key, s3_bucket ]
+    source: dist/release/*
+    target: /umschlag/ui/${DRONE_TAG##v}
+    strip_prefix: dist/release/
+    path_style: true
+    when:
+      event: [ tag ]
+      branch: [ refs/tags/* ]
 
-  # rsync:
-  #   image: plugins/rsync
-  #   user: deploy
-  #   host: dl.webhippie.de
-  #   source: dist/release/
-  #   target: /usr/share/webapps/dl/public_html/umschlag-ui/${DRONE_TAG##release/v}
-  #   recursive: true
-  #   delete: true
-  #   when:
-  #     event: [ push ]
-  #     branch: [ release/* ]
+  archive:
+    image: plugins/s3
+    secrets: [ s3_endpoint, aws_access_key_id, aws_secret_access_key, s3_bucket ]
+    source: dist/release/*
+    target: /umschlag/ui/${DRONE_TAG##release/v}
+    strip_prefix: dist/release/
+    path_style: true
+    when:
+      event: [ push ]
+      branch: [ release/* ]
 
-  # rsync:
-  #   image: plugins/rsync
-  #   user: deploy
-  #   host: dl.webhippie.de
-  #   source: dist/release/
-  #   target: /usr/share/webapps/dl/public_html/umschlag-ui/master
-  #   recursive: true
-  #   delete: true
-  #   when:
-  #     event: push
-  #     branch: master
+  archive:
+    image: plugins/s3
+    secrets: [ s3_endpoint, aws_access_key_id, aws_secret_access_key, s3_bucket ]
+    source: dist/release/*
+    target: /umschlag/ui/master
+    strip_prefix: dist/release/
+    path_style: true
+    when:
+      event: [ push ]
+      branch: [ master ]
 
   github:
     image: plugins/github-release
+    secrets: [ github_token ]
     files:
       - dist/release/*
     when:
@@ -116,3 +130,4 @@ pipeline:
 
   gitter:
     image: plugins/gitter
+    secrets: [ gitter_webhook ]
