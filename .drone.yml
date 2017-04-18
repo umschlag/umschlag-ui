@@ -34,7 +34,7 @@ pipeline:
       - make build
 
   updater:
-    image: webhippie/golang:latest
+    image: karalabe/xgo-latest:latest
     pull: true
     environment:
       - CGO_ENABLED=0
