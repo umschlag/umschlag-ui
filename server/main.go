@@ -6,10 +6,12 @@ import (
 	"net/http"
 	"net/url"
 	"os"
+	"path"
 	"runtime"
 	"time"
 
 	"github.com/Sirupsen/logrus"
+	"github.com/gin-contrib/pprof"
 	"github.com/gin-gonic/gin"
 	"github.com/joho/godotenv"
 	"github.com/urfave/cli"
@@ -61,7 +63,7 @@ func main() {
 					Name:        "host",
 					Value:       "http://localhost:9000",
 					Usage:       "External access to the UI",
-					EnvVar:      "KLEISTER_UI_HOST",
+					EnvVar:      "UMSCHLAG_UI_HOST",
 					Destination: &Config.Server.Host,
 				},
 				cli.StringFlag{
@@ -72,13 +74,6 @@ func main() {
 					Destination: &Config.Server.Addr,
 				},
 				cli.StringFlag{
-					Name:        "root",
-					Value:       "/",
-					Usage:       "Root folder of the app",
-					EnvVar:      "UMSCHLAG_UI_ROOT",
-					Destination: &Config.Server.Root,
-				},
-				cli.StringFlag{
 					Name:        "endpoint",
 					Value:       "http://localhost:8000",
 					Usage:       "URL for the API server",
@@ -86,35 +81,48 @@ func main() {
 					Destination: &Config.Server.Endpoint,
 				},
 				cli.StringFlag{
+					Name:        "static",
+					Value:       "",
+					Usage:       "Folder for serving assets",
+					EnvVar:      "UMSCHLAG_UI_STATIC",
+					Destination: &Config.Server.Static,
+				},
+				cli.StringFlag{
 					Name:        "storage",
-					Value:       "storage/",
-					Usage:       "Folder for storing assets",
-					EnvVar:      "KLEISTER_UI_STORAGE",
+					Value:       "",
+					Usage:       "Folder for storing files",
+					EnvVar:      "UMSCHLAG_UI_STORAGE",
 					Destination: &Config.Server.Storage,
 				},
 				cli.StringFlag{
-					Name:        "ssl-cert",
+					Name:        "cert",
 					Value:       "",
 					Usage:       "Path to SSL cert",
-					EnvVar:      "KLEISTER_SSL_CERT",
+					EnvVar:      "UMSCHLAG_UI_CERT",
 					Destination: &Config.Server.Cert,
 				},
 				cli.StringFlag{
-					Name:        "ssl-key",
+					Name:        "key",
 					Value:       "",
 					Usage:       "Path to SSL key",
-					EnvVar:      "KLEISTER_SSL_KEY",
+					EnvVar:      "UMSCHLAG_UI_KEY",
 					Destination: &Config.Server.Key,
 				},
 				cli.BoolFlag{
-					Name:        "ssl-letsencrypt",
+					Name:        "letsencrypt",
 					Usage:       "Enable Let's Encrypt SSL",
-					EnvVar:      "KLEISTER_SSL_LETSENCRYPT",
+					EnvVar:      "UMSCHLAG_UI_LETSENCRYPT",
 					Destination: &Config.Server.LetsEncrypt,
+				},
+				cli.BoolFlag{
+					Name:        "pprof",
+					Usage:       "Enable pprof debugger",
+					EnvVar:      "UMSCHLAG_UI_PPROF",
+					Destination: &Config.Server.Pprof,
 				},
 			},
 			Action: func(c *cli.Context) {
-				logrus.Infof("Starting the UI on %s", Config.Server.Addr)
+				logrus.Infof("Starting UI on %s", Config.Server.Addr)
 
 				if Config.Debug {
 					gin.SetMode(gin.DebugMode)
@@ -131,10 +139,26 @@ func main() {
 				e.Use(SetLogger())
 				e.Use(SetRecovery())
 
-				e.StaticFS(
-					Config.Server.Root,
-					HTTP,
-				)
+				if Config.Server.Pprof {
+					pprof.Register(
+						e,
+						&pprof.Options{
+							RoutePrefix: "/debug/pprof",
+						},
+					)
+				}
+
+				if Config.Server.Static != "" {
+					e.Static(
+						"/assets",
+						path.Join(Config.Server.Static, "assets"),
+					)
+				} else {
+					e.StaticFS(
+						"/assets",
+						HTTP,
+					)
+				}
 
 				e.NoRoute(Index)
 

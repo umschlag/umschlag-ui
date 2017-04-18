@@ -13,11 +13,13 @@
         <ul class="navbar-nav">
           <router-link tag="li" to="/" exact class="nav-item" active-class="active">
             <a class="nav-link">
+              <i class="fa fa-home" aria-hidden="true"></i>
               Dashboard
             </a>
           </router-link>
           <router-link tag="li" to="/profile" exact class="nav-item" active-class="active">
             <a class="nav-link">
+              <i class="fa fa-user" aria-hidden="true"></i>
               Profile
             </a>
           </router-link>

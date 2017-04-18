@@ -2,8 +2,11 @@ package main
 
 import (
 	"html/template"
+	"io/ioutil"
 	"net/http"
+	"path"
 
+	"github.com/Sirupsen/logrus"
 	"github.com/gin-gonic/gin"
 )
 
@@ -13,7 +16,6 @@ func Index(c *gin.Context) {
 		http.StatusOK,
 		"index.html",
 		gin.H{
-			"Root":     Config.Server.Root,
 			"Endpoint": Config.Server.Endpoint,
 		},
 	)
@@ -21,7 +23,29 @@ func Index(c *gin.Context) {
 
 // Template loads the template to make it parseable.
 func Template() *template.Template {
-	file, _ := ReadFile("index.html")
+	var (
+		file []byte
+		err  error
+	)
+
+	if Config.Server.Static != "" {
+		file, err = ioutil.ReadFile(
+			path.Join(
+				Config.Server.Static,
+				"index.html",
+			),
+		)
+
+		if err != nil {
+			logrus.Errorf("Failed to read index template. %s", err)
+		}
+	} else {
+		file, err = ReadFile("index.html")
+
+		if err != nil {
+			logrus.Errorf("Failed to read index template. %s", err)
+		}
+	}
 
 	return template.Must(
 		template.New(

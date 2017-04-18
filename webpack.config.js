@@ -11,9 +11,9 @@ module.exports = {
   },
 
   output: {
-    path: require('path').resolve(__dirname, 'assets'),
-    filename: 'scripts/umschlag.js',
-    publicPath: ''
+    path: require('path').resolve(__dirname, 'dist', 'static'),
+    filename: 'assets/scripts/umschlag.js',
+    publicPath: '/'
   },
 
   devtool: 'source-map',
@@ -54,19 +54,19 @@ module.exports = {
       },
       {
         test: /\.(woff|woff2)(\?v=\d+\.\d+\.\d+)?$/,
-        loader: 'file?name=fonts/[name].[ext]&mimetype=application/font-woff'
+        loader: 'file?name=assets/fonts/[name].[ext]&mimetype=application/font-woff'
       },
       {
         test: /\.svg(\?v=\d+\.\d+\.\d+)?$/,
-        loader: 'file?name=fonts/[name].[ext]&mimetype=image/svg+xml'
+        loader: 'file?name=assets/fonts/[name].[ext]&mimetype=image/svg+xml'
       },
       {
         test: /\.ttf(\?v=\d+\.\d+\.\d+)?$/,
-        loader: 'file?name=fonts/[name].[ext]&mimetype=application/octet-stream'
+        loader: 'file?name=assets/fonts/[name].[ext]&mimetype=application/octet-stream'
       },
       {
         test: /\.eot(\?v=\d+\.\d+\.\d+)?$/,
-        loader: 'file?name=fonts/[name].[ext]&mimetype=application/vnd.ms-fontobject'
+        loader: 'file?name=assets/fonts/[name].[ext]&mimetype=application/vnd.ms-fontobject'
       }
     ]
   },
@@ -79,11 +79,11 @@ module.exports = {
 
   plugins: [
     new ExtractTextPlugin(
-      'styles/umschlag.css'
+      'assets/styles/umschlag.css'
     ),
     new CopyWebpackPlugin([{
       from: 'images',
-      to: 'images'
+      to: 'assets/images'
     }]),
     new HtmlWebpackPlugin({
       template: 'index.html.ejs',

@@ -19,7 +19,7 @@
   },
   "config": {},
   "scripts": {
-    "clean": "rimraf assets/",
+    "clean": "rimraf dist/static/",
     "lint": "eslint src/",
     "start": "NODE_ENV=development node webpack.dev.js",
     "debug": "NODE_ENV=development webpack -d",
