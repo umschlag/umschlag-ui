@@ -21,7 +21,6 @@
   "scripts": {
     "clean": "rimraf dist/static/",
     "lint": "eslint src/",
-    "start": "NODE_ENV=development node webpack.dev.js",
     "debug": "NODE_ENV=development webpack -d",
     "watch": "NODE_ENV=development webpack -d -w",
     "build": "NODE_ENV=production webpack -p",

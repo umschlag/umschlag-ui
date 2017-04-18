@@ -1,7 +1,8 @@
 # Umschlag: Web UI
 
 [![Build Status](http://github.dronehippie.de/api/badges/umschlag/umschlag-ui/status.svg)](http://github.dronehippie.de/umschlag/umschlag-ui)
-[![Coverage Status](http://coverage.dronehippie.de/badges/umschlag/umschlag-ui/coverage.svg)](http://coverage.dronehippie.de/umschlag/umschlag-ui)
+[![Go Doc](https://godoc.org/github.com/umschlag/umschlag-ui/server?status.svg)](http://godoc.org/github.com/umschlag/umschlag-ui/server)
+[![Go Report](http://goreportcard.com/badge/github.com/umschlag/umschlag-ui)](http://goreportcard.com/report/github.com/umschlag/umschlag-ui)
 [![](https://images.microbadger.com/badges/image/umschlag/umschlag-ui.svg)](http://microbadger.com/images/umschlag/umschlag-ui "Get your own image badge on microbadger.com")
 [![Join the chat at https://gitter.im/umschlag/umschlag](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/umschlag/umschlag)
 [![Stories in Ready](https://badge.waffle.io/umschlag/umschlag-api.svg?label=ready&title=Ready)](http://waffle.io/umschlag/umschlag-api)
@@ -36,7 +37,7 @@ go get -d github.com/umschlag/umschlag-ui
 cd $GOPATH/src/github.com/umschlag/umschlag-ui
 make generate build
 
-bin/umschlag-ui -h
+./umschlag-ui -h
 ```
 
 With the `make generate` command we are embedding all the static assets into the
@@ -52,10 +53,11 @@ document. To start development just execute those commands:
 
 ```
 npm install
-npm run start -- --host localhost:8080
+npm run watch
+./umschlag-ui --debug server --static dist/static/
 ```
 
-The development server proxies all requests to the define host. So in order to
+The development server reloads the used assets on every request. So in order to
 properly work with it you need to start the API separately.
 
 After launching this command on a terminal you can access the web interface at
