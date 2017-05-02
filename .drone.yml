@@ -13,10 +13,10 @@ pipeline:
     image: webhippie/nodejs:latest
     pull: true
     commands:
-      - npm install
-      - npm run lint
-      - npm run build
-      - npm run test
+      - yarn install --frozen-lockfile
+      - yarn run lint
+      - yarn run build
+      - yarn run test
 
   server:
     image: webhippie/golang:latest

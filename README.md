@@ -21,8 +21,8 @@ won't be covered by those instructions. To build the sources just execute the
 following command after NodeJS setup:
 
 ```
-npm install
-npm run build
+yarn install
+yarn run build
 ```
 
 If you also want to publish it as a single binary with our server based on Go
