@@ -19,15 +19,9 @@
   <body role="document">
     <div id="app"></div>
 
-    <% if (htmlWebpackPlugin.options.goTemplate) { %>
-      <script>
-        window.INITIAL_STATE = { api: "{{ .Endpoint }}" };
-      </script>
-    <% } else { %>
-      <script>
-        window.INITIAL_STATE = { api: "" };
-      </script>
-    <% } %>
+    <script>
+      window.INITIAL_STATE = { api: "{{ .Endpoint }}" };
+    </script>
 
     <% for (var i = 0; i < htmlWebpackPlugin.files.js.length; i++) { %>
       <script src="<%= htmlWebpackPlugin.files.js[i] %>"></script>
