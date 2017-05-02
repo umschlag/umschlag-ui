@@ -82,17 +82,16 @@ module.exports = {
       'assets/styles/umschlag.css'
     ),
     new CopyWebpackPlugin([{
-      from: 'images',
+      from: 'src/images',
       to: 'assets/images'
     }]),
     new HtmlWebpackPlugin({
-      template: 'index.html.ejs',
+      template: 'src/index.html.ejs',
       inject: false,
       minify: {
         html5: true,
         collapseWhitespace: true
-      },
-      goTemplate: process.env.NODE_ENV === 'production'
+      }
     }),
     new Webpack.DefinePlugin({
       'process.env.NODE_ENV': JSON.stringify(

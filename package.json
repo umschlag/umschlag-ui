@@ -5,14 +5,8 @@
   "description": "UI for Umschlag, a docker distribution management system",
   "homepage": "https://github.com/umschlag/umschlag-ui#readme",
   "license": "Apache-2.0",
-  "author": {
-    "name": "Thomas Boerger",
-    "email": "thomas@webhippie.de"
-  },
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/umschlag/umschlag-ui.git"
-  },
+  "author": "Thomas Boerger <thomas@webhippie.de>",
+  "repository": "https://github.com/umschlag/umschlag-ui.git",
   "bugs": {
     "url": "https://github.com/umschlag/umschlag-ui/issues",
     "email": "umschlag@webhippie.de"
@@ -48,7 +42,7 @@
     "less-loader": "^2.2.3",
     "rimraf": "^2.5.4",
     "vue-loader": "^10.0.2",
-    "vue-template-compiler": "^2.1.8",
+    "vue-template-compiler": "^2.0.0",
     "webpack": "^1.12.14",
     "webpack-dev-server": "^1.14.1",
     "yargs": "^4.8.0"
@@ -56,8 +50,9 @@
   "dependencies": {
     "@getable/lato": "^1.0.1",
     "babel-runtime": "^6.20.0",
-    "bootstrap": "^4.0.0-alpha.5",
     "font-awesome": "^4.7.0",
+    "jquery": "^3.2.1",
+    "uikit": "^3.0.0-beta.22",
     "vue": "^2.1.8",
     "vue-resource": "^1.0.3",
     "vue-router": "^2.1.1",
