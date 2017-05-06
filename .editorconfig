@@ -1,10 +1,27 @@
-# EditorConfig is awesome: http://EditorConfig.org
+# http://editorconfig.org
+
+root = true
 
 [*]
-end_of_line = lf
-insert_final_newline = true
-
-[*.{css,html,js,less}]
 charset = utf-8
+insert_final_newline = true
+trim_trailing_whitespace = true
+
+[Makefile]
+indent_style = tab
+indent_size = 4
+
+[*.go]
+indent_style = tab
+indent_size = 4
+
+[*.{html,js,css,less,vue}]
+indent_style = tab
+indent_size = 4
+
+[*.{yml,toml,json}]
 indent_style = space
 indent_size = 2
+
+[*.md]
+trim_trailing_whitespace = true
