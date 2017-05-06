@@ -9,9 +9,8 @@ endif
 
 SHA := $(shell git rev-parse --short HEAD)
 DATE := $(shell date -u '+%Y%m%d')
-LDFLAGS += -s -w -extldflags "-static" -X "$(IMPORT)/main.VersionDev=$(SHA)" -X "$(IMPORT)/main.VersionDate=$(DATE)"
+LDFLAGS += -s -w -X "$(IMPORT)/main.VersionDev=$(SHA)" -X "$(IMPORT)/main.VersionDate=$(DATE)"
 
-TARGETS ?= linux/*,darwin/*,windows/*
 PACKAGES ?= $(shell go list ./server/... | grep -v /vendor/)
 SOURCES ?= $(shell find . -name "*.go" -type f -not -path "./vendor/*")
 
@@ -89,9 +88,6 @@ lint:
 test:
 	for PKG in $(PACKAGES); do go test -cover -coverprofile $$GOPATH/src/$$PKG/coverage.out $$PKG || exit 1; done;
 
-.PHONY: check
-check: test
-
 .PHONY: install
 install: $(SOURCES)
 	go install -v -tags '$(TAGS)' -ldflags '$(LDFLAGS)' $(IMPORT)
@@ -100,21 +96,41 @@ install: $(SOURCES)
 build: $(EXECUTABLE)
 
 $(EXECUTABLE): $(SOURCES)
-	go build -v -tags '$(TAGS)' -ldflags '$(LDFLAGS)' -o $@ $(IMPORT)
+	go build -i -v -tags '$(TAGS)' -ldflags '$(LDFLAGS)' -o $@ $(IMPORT)
 
 .PHONY: release
-release: release-dirs release-build release-copy release-check
+release: release-dirs release-windows release-linux release-darwin release-copy release-check
 
 .PHONY: release-dirs
 release-dirs:
 	mkdir -p $(DIST)/binaries $(DIST)/release
 
-.PHONY: release-build
-release-build:
-	@which xgo > /dev/null; if [ $$? -ne 0 ]; then \
+.PHONY: release-windows
+release-windows:
+	@hash xgo > /dev/null 2>&1; if [ $$? -ne 0 ]; then \
 		go get -u github.com/karalabe/xgo; \
 	fi
-	xgo -dest $(DIST)/binaries -tags '$(TAGS)' -ldflags '-s -w $(LDFLAGS)' -targets '$(TARGETS)' -out $(EXECUTABLE)-$(VERSION) $(IMPORT)
+	xgo -dest $(DIST)/binaries -tags 'netgo $(TAGS)' -ldflags '-linkmode external -extldflags "-static" $(LDFLAGS)' -targets 'windows/*' -out $(EXECUTABLE)-$(VERSION) ./server
+ifeq ($(CI),drone)
+	mv /build/* $(DIST)/binaries
+endif
+
+.PHONY: release-linux
+release-linux:
+	@hash xgo > /dev/null 2>&1; if [ $$? -ne 0 ]; then \
+		go get -u github.com/karalabe/xgo; \
+	fi
+	xgo -dest $(DIST)/binaries -tags 'netgo $(TAGS)' -ldflags '-linkmode external -extldflags "-static" $(LDFLAGS)' -targets 'linux/*' -out $(EXECUTABLE)-$(VERSION) ./server
+ifeq ($(CI),drone)
+	mv /build/* $(DIST)/binaries
+endif
+
+.PHONY: release-darwin
+release-darwin:
+	@hash xgo > /dev/null 2>&1; if [ $$? -ne 0 ]; then \
+		go get -u github.com/karalabe/xgo; \
+	fi
+	xgo -dest $(DIST)/binaries -tags 'netgo $(TAGS)' -ldflags '$(LDFLAGS)' -targets 'darwin/*' -out $(EXECUTABLE)-$(VERSION) ./server
 ifeq ($(CI),drone)
 	mv /build/* $(DIST)/binaries
 endif

@@ -32,7 +32,7 @@ pipeline:
       - make test
       - make build
 
-  updater:
+  release:
     image: karalabe/xgo-latest:latest
     pull: true
     environment:
@@ -40,7 +40,7 @@ pipeline:
       - TAGS=
       - GOPATH=/srv/app
     commands:
-      - make publish
+      - make release
     when:
       event: [ push, tag ]
       branch: [ master, release/*, refs/tags/* ]
@@ -84,6 +84,16 @@ pipeline:
     when:
       event: [ push ]
       branch: [ master ]
+
+  microbadger:
+    image: zyclonite/drone-webhook
+    secrets:
+      - source: microbadger_token
+        target: plugin_webhook
+    when:
+      event: [ push, tag ]
+      branch: [ master, release/*, refs/tags/* ]
+      status: [ success ]
 
   archive:
     image: plugins/s3
