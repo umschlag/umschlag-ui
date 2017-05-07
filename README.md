@@ -3,6 +3,7 @@
 [![Build Status](http://github.dronehippie.de/api/badges/umschlag/umschlag-ui/status.svg)](http://github.dronehippie.de/umschlag/umschlag-ui)
 [![Go Doc](https://godoc.org/github.com/umschlag/umschlag-ui/server?status.svg)](http://godoc.org/github.com/umschlag/umschlag-ui/server)
 [![Go Report](http://goreportcard.com/badge/github.com/umschlag/umschlag-ui)](http://goreportcard.com/report/github.com/umschlag/umschlag-ui)
+[![Sourcegraph](https://sourcegraph.com/github.com/umschlag/umschlag-ui/-/badge.svg)](https://sourcegraph.com/github.com/umschlag/umschlag-ui?badge)
 [![](https://images.microbadger.com/badges/image/umschlag/umschlag-ui.svg)](http://microbadger.com/images/umschlag/umschlag-ui "Get your own image badge on microbadger.com")
 [![Join the chat at https://gitter.im/umschlag/umschlag](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/umschlag/umschlag)
 [![Stories in Ready](https://badge.waffle.io/umschlag/umschlag-api.svg?label=ready&title=Ready)](http://waffle.io/umschlag/umschlag-api)
