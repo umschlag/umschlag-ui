@@ -1,7 +1,7 @@
 FROM alpine:edge
 MAINTAINER Thomas Boerger <thomas@webhippie.de>
 
-EXPOSE 9000
+EXPOSE 9000 80 443
 VOLUME ["/var/lib/umschlag"]
 
 RUN apk update && \
