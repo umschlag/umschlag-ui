@@ -122,12 +122,12 @@ func main() {
 				cli.BoolFlag{
 					Name:   "strict-curves",
 					Usage:  "Use strict SSL curves",
-					EnvVar: "KLEISTER_STRICT_CURVES",
+					EnvVar: "UMSCHLAG_STRICT_CURVES",
 				},
 				cli.BoolFlag{
 					Name:   "strict-ciphers",
 					Usage:  "Use strict SSL ciphers",
-					EnvVar: "KLEISTER_STRICT_CIPHERS",
+					EnvVar: "UMSCHLAG_STRICT_CIPHERS",
 				},
 				cli.BoolFlag{
 					Name:        "pprof",
