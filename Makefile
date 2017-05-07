@@ -1,5 +1,5 @@
 DIST := dist
-IMPORT := github.com/umschlag/umschlag-ui/server
+IMPORT := github.com/umschlag/umschlag-ui/cmd/umschlag-ui
 
 ifeq ($(OS), Windows_NT)
 	EXECUTABLE := umschlag-ui.exe
@@ -11,7 +11,7 @@ SHA := $(shell git rev-parse --short HEAD)
 DATE := $(shell date -u '+%Y%m%d')
 LDFLAGS += -s -w -X "$(IMPORT)/main.VersionDev=$(SHA)" -X "$(IMPORT)/main.VersionDate=$(DATE)"
 
-PACKAGES ?= $(shell go list ./server/... | grep -v /vendor/)
+PACKAGES ?= $(shell go list ./cmd/... | grep -v /vendor/)
 SOURCES ?= $(shell find . -name "*.go" -type f -not -path "./vendor/*")
 
 TAGS ?=
@@ -111,7 +111,7 @@ release-windows:
 	@hash xgo > /dev/null 2>&1; if [ $$? -ne 0 ]; then \
 		go get -u github.com/karalabe/xgo; \
 	fi
-	xgo -dest $(DIST)/binaries -tags 'netgo $(TAGS)' -ldflags '-linkmode external -extldflags "-static" $(LDFLAGS)' -targets 'windows/*' -out $(EXECUTABLE)-$(VERSION) ./server
+	xgo -dest $(DIST)/binaries -tags 'netgo $(TAGS)' -ldflags '-linkmode external -extldflags "-static" $(LDFLAGS)' -targets 'windows/*' -out $(EXECUTABLE)-$(VERSION) ./cmd/umschlag-ui
 ifeq ($(CI),drone)
 	mv /build/* $(DIST)/binaries
 endif
@@ -121,7 +121,7 @@ release-linux:
 	@hash xgo > /dev/null 2>&1; if [ $$? -ne 0 ]; then \
 		go get -u github.com/karalabe/xgo; \
 	fi
-	xgo -dest $(DIST)/binaries -tags 'netgo $(TAGS)' -ldflags '-linkmode external -extldflags "-static" $(LDFLAGS)' -targets 'linux/*' -out $(EXECUTABLE)-$(VERSION) ./server
+	xgo -dest $(DIST)/binaries -tags 'netgo $(TAGS)' -ldflags '-linkmode external -extldflags "-static" $(LDFLAGS)' -targets 'linux/*' -out $(EXECUTABLE)-$(VERSION) ./cmd/umschlag-ui
 ifeq ($(CI),drone)
 	mv /build/* $(DIST)/binaries
 endif
@@ -131,7 +131,7 @@ release-darwin:
 	@hash xgo > /dev/null 2>&1; if [ $$? -ne 0 ]; then \
 		go get -u github.com/karalabe/xgo; \
 	fi
-	xgo -dest $(DIST)/binaries -tags 'netgo $(TAGS)' -ldflags '$(LDFLAGS)' -targets 'darwin/*' -out $(EXECUTABLE)-$(VERSION) ./server
+	xgo -dest $(DIST)/binaries -tags 'netgo $(TAGS)' -ldflags '$(LDFLAGS)' -targets 'darwin/*' -out $(EXECUTABLE)-$(VERSION) ./cmd/umschlag-ui
 ifeq ($(CI),drone)
 	mv /build/* $(DIST)/binaries
 endif
