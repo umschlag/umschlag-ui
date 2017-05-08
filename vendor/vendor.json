@@ -93,12 +93,6 @@
 			"revisionTime": "2017-03-22T23:44:13Z"
 		},
 		{
-			"checksumSHA1": "K/CP3EBR0TUpw8DPpjRExGEYNkY=",
-			"path": "github.com/urfave/cli",
-			"revision": "8ba6f23b6e36d03666a14bd9421f5e3efcb59aca",
-			"revisionTime": "2017-03-29T01:35:17Z"
-		},
-		{
 			"checksumSHA1": "QNHLX/9+KNzu0oCCdqUSEX4kyiY=",
 			"path": "golang.org/x/crypto/acme",
 			"revision": "efac7f277b17c19894091e358c6130cb6bd51117",
@@ -145,6 +139,12 @@
 			"path": "gopkg.in/go-playground/validator.v8",
 			"revision": "5f57d2222ad794d0dffb07e664ea05e2ee07d60c",
 			"revisionTime": "2016-07-18T13:41:25Z"
+		},
+		{
+			"checksumSHA1": "6DsBvq9uYf/UaCAUrUBbgpHFYRg=",
+			"path": "gopkg.in/urfave/cli.v2",
+			"revision": "922e3e2ceaaa1831c859679af772dcd534095119",
+			"revisionTime": "2017-04-18T05:23:20Z"
 		},
 		{
 			"checksumSHA1": "fALlQNY1fM99NesfLJ50KguWsio=",
