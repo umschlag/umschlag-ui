@@ -14,6 +14,12 @@
   version = "v1"
 
 [[projects]]
+  name = "github.com/coreos/go-semver"
+  packages = ["semver"]
+  revision = "8ab6407b697782a06568d4b7f1db25550ec2e4c6"
+  version = "v0.2.0"
+
+[[projects]]
   branch = "master"
   name = "github.com/facebookgo/clock"
   packages = ["."]
@@ -124,6 +130,6 @@
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-  inputs-digest = "7f838323ca15c5b24c76f9630a6c457413f77ee78c7d5e87ea953da8bee5dd66"
+  inputs-digest = "178cda032a0c20ac80dc08c180601cfd0b3db4a93ba7cd1a4358ea7e918d97e8"
   solver-name = "gps-cdcl"
   solver-version = 1

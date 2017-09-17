@@ -34,7 +34,7 @@ func main() {
 
 	app := &cli.App{
 		Name:     "umschlag-ui",
-		Version:  Version,
+		Version:  Version.String(),
 		Usage:    "A docker distribution management system",
 		Compiled: time.Now(),
 
