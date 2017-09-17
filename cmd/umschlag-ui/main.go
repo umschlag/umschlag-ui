@@ -19,7 +19,7 @@ import (
 	"gopkg.in/urfave/cli.v2"
 )
 
-//go:generate fileb0x ab0x.yaml
+//go:generate retool do fileb0x ab0x.yaml
 
 var (
 	defaultAddr = ":9000"
