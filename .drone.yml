@@ -6,9 +6,11 @@ pipeline:
   restore:
     image: plugins/s3-cache:1
     pull: true
-    secrets: [ cache_s3_server, cache_s3_access_key, cache_s3_secret_key ]
+    secrets: [ cache_s3_endpoint, cache_s3_access_key, cache_s3_secret_key ]
     pull: true
     restore: true
+    when:
+      local: false
 
   testing:
     image: webhippie/nodejs:latest
@@ -94,23 +96,25 @@ pipeline:
   rebuild:
     image: plugins/s3-cache:1
     pull: true
-    secrets: [ cache_s3_server, cache_s3_access_key, cache_s3_secret_key ]
+    secrets: [ cache_s3_endpoint, cache_s3_access_key, cache_s3_secret_key ]
     rebuild: true
     mount:
       - node_modules
       - _tools/bin
       - _tools/pkg
     when:
+      local: false
       event: [ push ]
       branch: [ master, release/* ]
 
   flush:
     image: plugins/s3-cache:1
     pull: true
-    secrets: [ cache_s3_server, cache_s3_access_key, cache_s3_secret_key ]
+    secrets: [ cache_s3_endpoint, cache_s3_access_key, cache_s3_secret_key ]
     flush: true
     flush_age: 14
     when:
+      local: false
       event: [ push ]
       branch: [ master, release/* ]
 
@@ -162,3 +166,6 @@ pipeline:
     image: plugins/gitter:1
     pull: true
     secrets: [ gitter_webhook ]
+    when:
+      local: false
+      status: [ success, failure ]
