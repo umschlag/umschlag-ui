@@ -51,7 +51,7 @@ graph:
 .PHONY: clean
 clean:
 	go clean -i ./...
-	rm -rf $(EXECUTABLE) $(DIST) server/bindata.go
+	rm -rf $(EXECUTABLE) $(DIST)/binaries $(DIST)/release server/bindata.go
 
 .PHONY: fmt
 fmt:
