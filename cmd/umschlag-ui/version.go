@@ -2,33 +2,35 @@ package main
 
 import (
 	"fmt"
+
+	"github.com/coreos/go-semver/semver"
 )
 
 var (
 	// VersionMajor is the current major version
-	VersionMajor = 0
+	VersionMajor int64
 
 	// VersionMinor is the current minor version
-	VersionMinor = 0
+	VersionMinor int64 = 1
 
 	// VersionPatch is the current patch version
-	VersionPatch = 0
+	VersionPatch int64
+
+	// VersionPre indicates a pre release tag
+	VersionPre = "alpha1"
 
 	// VersionDev indicates the current commit
-	VersionDev = "dev"
+	VersionDev = "0000000"
 
 	// VersionDate indicates the build date
 	VersionDate = "20170101"
-)
 
-var (
 	// Version is the version of the current implementation.
-	Version = fmt.Sprintf(
-		"%d.%d.%d+git%s.%s",
-		VersionMajor,
-		VersionMinor,
-		VersionPatch,
-		VersionDate,
-		VersionDev,
-	)
+	Version = semver.Version{
+		Major:      VersionMajor,
+		Minor:      VersionMinor,
+		Patch:      VersionPatch,
+		PreRelease: semver.PreRelease(VersionPre),
+		Metadata:   fmt.Sprintf("git%s.%s", VersionDate, VersionDev),
+	}
 )

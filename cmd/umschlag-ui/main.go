@@ -19,7 +19,7 @@ import (
 	"gopkg.in/urfave/cli.v2"
 )
 
-//go:generate fileb0x ab0x.yaml
+//go:generate retool -tool-dir ../../_tools do fileb0x ab0x.yaml
 
 var (
 	defaultAddr = ":9000"
@@ -34,7 +34,7 @@ func main() {
 
 	app := &cli.App{
 		Name:     "umschlag-ui",
-		Version:  Version,
+		Version:  Version.String(),
 		Usage:    "A docker distribution management system",
 		Compiled: time.Now(),
 

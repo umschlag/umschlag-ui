@@ -1,18 +1,15 @@
+NAME := umschlag-ui
 DIST := dist
-IMPORT := github.com/umschlag/umschlag-ui/cmd/umschlag-ui
+IMPORT := github.com/umschlag/$(NAME)/cmd/$(NAME)
 
 ifeq ($(OS), Windows_NT)
-	EXECUTABLE := umschlag-ui.exe
+	EXECUTABLE := $(NAME).exe
 else
-	EXECUTABLE := umschlag-ui
+	EXECUTABLE := $(NAME)
 endif
 
-SHA := $(shell git rev-parse --short HEAD)
-DATE := $(shell date -u '+%Y%m%d')
-LDFLAGS += -s -w -X "$(IMPORT)/main.VersionDev=$(SHA)" -X "$(IMPORT)/main.VersionDate=$(DATE)"
-
-PACKAGES ?= $(shell go list ./cmd/... | grep -v /vendor/)
-SOURCES ?= $(shell find . -name "*.go" -type f -not -path "./vendor/*")
+PACKAGES ?= $(shell go list ./... | grep -v /vendor/ | grep -v /_tools/)
+SOURCES ?= $(shell find . -name "*.go" -type f -not -path "./vendor/*" -not -path "./_tools/*")
 
 TAGS ?=
 
@@ -26,21 +23,35 @@ else
 	endif
 endif
 
+ifndef SHA
+	SHA := $(shell git rev-parse --short HEAD)
+endif
+
+ifndef DATE
+	DATE := $(shell date -u '+%Y%m%d')
+endif
+
+LDFLAGS += -s -w -X "$(IMPORT)/main.VersionDev=$(SHA)" -X "$(IMPORT)/main.VersionDate=$(DATE)"
+
 .PHONY: all
 all: build
 
 .PHONY: update
 update:
-	@which govendor > /dev/null; if [ $$? -ne 0 ]; then \
-		go get -u github.com/kardianos/govendor; \
-	fi
-	govendor add +external
-	govendor fetch +external
+	retool do dep ensure -update
+
+.PHONY: sync
+sync:
+	retool do dep ensure
+
+.PHONY: graph
+graph:
+	retool do dep status -dot | dot -T png -o docs/deps.png
 
 .PHONY: clean
 clean:
 	go clean -i ./...
-	rm -rf $(EXECUTABLE) $(DIST) server/bindata.go
+	rm -rf $(EXECUTABLE) $(DIST)/binaries $(DIST)/release server/bindata.go
 
 .PHONY: fmt
 fmt:
@@ -52,38 +63,43 @@ vet:
 
 .PHONY: generate
 generate:
-	@which fileb0x > /dev/null; if [ $$? -ne 0 ]; then \
-		go get -u github.com/UnnoTed/fileb0x; \
-	fi
 	go generate $(PACKAGES)
 
 .PHONY: errcheck
 errcheck:
-	@which errcheck > /dev/null; if [ $$? -ne 0 ]; then \
-		go get -u github.com/kisielk/errcheck; \
-	fi
-	errcheck $(PACKAGES)
+	retool do errcheck $(PACKAGES)
 
 .PHONY: varcheck
 varcheck:
-	@which varcheck > /dev/null; if [ $$? -ne 0 ]; then \
-		go get -u github.com/opennota/check/cmd/varcheck; \
-	fi
-	varcheck $(PACKAGES)
+	retool do varcheck $(PACKAGES)
 
 .PHONY: structcheck
 structcheck:
-	@which structcheck > /dev/null; if [ $$? -ne 0 ]; then \
-		go get -u github.com/opennota/check/cmd/structcheck; \
-	fi
-	structcheck $(PACKAGES)
+	retool do structcheck $(PACKAGES)
+
+.PHONY: unconvert
+unconvert:
+	retool do unconvert $(PACKAGES)
+
+.PHONY: interfacer
+interfacer:
+	retool do interfacer $(PACKAGES)
+
+.PHONY: misspell
+misspell:
+	retool misspell $(SOURCES)
+
+.PHONY: ineffassign
+ineffassign:
+	retool do ineffassign -n $(SOURCES)
+
+.PHONY: dupl
+dupl:
+	retool do dupl -t 100 $(SOURCES)
 
 .PHONY: lint
 lint:
-	@which golint > /dev/null; if [ $$? -ne 0 ]; then \
-		go get -u github.com/golang/lint/golint; \
-	fi
-	for PKG in $(PACKAGES); do golint -set_exit_status $$PKG || exit 1; done;
+	for PKG in $(PACKAGES); do retool do golint -set_exit_status $$PKG || exit 1; done;
 
 .PHONY: test
 test:
@@ -91,13 +107,13 @@ test:
 
 .PHONY: install
 install: $(SOURCES)
-	go install -v -tags '$(TAGS)' -ldflags '$(LDFLAGS)' $(IMPORT)
+	go install -v -tags '$(TAGS)' -ldflags '$(LDFLAGS)' ./cmd/$(NAME)
 
 .PHONY: build
 build: $(EXECUTABLE)
 
 $(EXECUTABLE): $(SOURCES)
-	go build -i -v -tags '$(TAGS)' -ldflags '$(LDFLAGS)' -o $@ $(IMPORT)
+	go build -i -v -tags '$(TAGS)' -ldflags '$(LDFLAGS)' -o $@ ./cmd/$(NAME)
 
 .PHONY: release
 release: release-dirs release-windows release-linux release-darwin release-copy release-check
@@ -111,7 +127,7 @@ release-windows:
 	@hash xgo > /dev/null 2>&1; if [ $$? -ne 0 ]; then \
 		go get -u github.com/karalabe/xgo; \
 	fi
-	xgo -dest $(DIST)/binaries -tags 'netgo $(TAGS)' -ldflags '-linkmode external -extldflags "-static" $(LDFLAGS)' -targets 'windows/*' -out $(EXECUTABLE)-$(VERSION) ./cmd/umschlag-ui
+	xgo -dest $(DIST)/binaries -tags 'netgo $(TAGS)' -ldflags '-linkmode external -extldflags "-static" $(LDFLAGS)' -targets 'windows/*' -out $(EXECUTABLE)-$(VERSION)  ./cmd/$(NAME)
 ifeq ($(CI),drone)
 	mv /build/* $(DIST)/binaries
 endif
@@ -121,7 +137,7 @@ release-linux:
 	@hash xgo > /dev/null 2>&1; if [ $$? -ne 0 ]; then \
 		go get -u github.com/karalabe/xgo; \
 	fi
-	xgo -dest $(DIST)/binaries -tags 'netgo $(TAGS)' -ldflags '-linkmode external -extldflags "-static" $(LDFLAGS)' -targets 'linux/*' -out $(EXECUTABLE)-$(VERSION) ./cmd/umschlag-ui
+	xgo -dest $(DIST)/binaries -tags 'netgo $(TAGS)' -ldflags '-linkmode external -extldflags "-static" $(LDFLAGS)' -targets 'linux/*' -out $(EXECUTABLE)-$(VERSION)  ./cmd/$(NAME)
 ifeq ($(CI),drone)
 	mv /build/* $(DIST)/binaries
 endif
@@ -131,7 +147,7 @@ release-darwin:
 	@hash xgo > /dev/null 2>&1; if [ $$? -ne 0 ]; then \
 		go get -u github.com/karalabe/xgo; \
 	fi
-	xgo -dest $(DIST)/binaries -tags 'netgo $(TAGS)' -ldflags '$(LDFLAGS)' -targets 'darwin/*' -out $(EXECUTABLE)-$(VERSION) ./cmd/umschlag-ui
+	xgo -dest $(DIST)/binaries -tags 'netgo $(TAGS)' -ldflags '$(LDFLAGS)' -targets 'darwin/*' -out $(EXECUTABLE)-$(VERSION)  ./cmd/$(NAME)
 ifeq ($(CI),drone)
 	mv /build/* $(DIST)/binaries
 endif
@@ -146,3 +162,13 @@ release-check:
 
 .PHONY: publish
 publish: release
+
+HAS_RETOOL := $(shell command -v retool)
+
+.PHONY: retool
+retool:
+ifndef HAS_RETOOL
+	go get -u github.com/twitchtv/retool
+endif
+	retool sync
+	retool build
