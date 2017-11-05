@@ -1,0 +1,19 @@
+FROM microsoft/nanoserver:10.0.14393.1593
+
+LABEL maintainer="Thomas Boerger <thomas@webhippie.de>"
+LABEL org.label-schema.version=latest-windows
+LABEL org.label-schema.name="Umschlag UI"
+LABEL org.label-schema.vendor="Thomas Boerger"
+LABEL org.label-schema.schema-version="1.0"
+
+EXPOSE 9000 80 443
+VOLUME ["/umschlag"]
+
+COPY dist/static /assets
+COPY umschlag-ui.exe /umschlag-ui.exe
+
+ENV UMSCHLAG_UI_ASSETS /assets
+ENV UMSCHLAG_UI_STORAGE /umschlag
+
+ENTRYPOINT ["\\umschlag-ui.exe"]
+CMD ["server"]

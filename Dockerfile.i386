@@ -22,7 +22,7 @@ RUN apk update && \
 COPY dist/static /usr/share/umschlag
 
 ARG VERSION
-COPY dist/binaries/umschlag-ui-master-linux-amd64 /usr/bin/
+COPY dist/binaries/umschlag-ui-$VERSION-linux-386 /usr/bin/
 
 ENV UMSCHLAG_UI_ASSETS /usr/share/umschlag
 ENV UMSCHLAG_UI_STORAGE /var/lib/umschlag

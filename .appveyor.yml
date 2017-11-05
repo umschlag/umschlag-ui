@@ -1,0 +1,32 @@
+version: '{build}'
+image: 'Visual Studio 2017'
+
+clone_folder: 'c:\go\src\github.com\umschlag\umschlag-ui'
+
+environment:
+  DOCKER_USERNAME:
+    secure: '4YzzahbEiMZQJpOCOd1LAw=='
+  DOCKER_PASSWORD:
+    secure: 'VqO/G3Zfslu6zSLdwHKO+Q=='
+
+install:
+  - cmd: |
+      docker version
+      go version
+build_script:
+  - cmd: |
+      make build
+      docker pull microsoft/nanoserver:10.0.14393.1593
+      docker build -f Dockerfile.windows -t umschlag/umschlag-ui:latest-windows .
+test_script:
+  - cmd: |
+      docker run --rm umschlag/umschlag-ui:latest-windows --version
+deploy_script:
+  - ps: |
+      $ErrorActionPreference = 'Stop';
+      if ( $env:APPVEYOR_PULL_REQUEST_NUMBER -Or ! $env:APPVEYOR_REPO_BRANCH.Equals("master")) {
+        Write-Host Nothing to deploy.
+      } else {
+        docker login --username $env:DOCKER_USERNAME --password $env:DOCKER_PASSWORD
+        docker push umschlag/umschlag-ui:latest-windows
+      }
