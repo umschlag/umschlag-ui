@@ -1,5 +1,5 @@
 NAME := umschlag-ui
-IMPORT := github.com/umschlag/$(NAME)/cmd/$(NAME)
+IMPORT := github.com/umschlag/$(NAME)
 DIST := dist
 
 EXECUTABLE := $(NAME)
@@ -12,7 +12,7 @@ endif
 
 PACKAGES ?= $(shell go list ./... | grep -v /vendor/ | grep -v /_tools/)
 SOURCES ?= $(shell find . -name "*.go" -type f -not -path "./vendor/*" -not -path "./_tools/*")
-GENERATE ?= $(IMPORT)
+GENERATE ?= $(IMPORT)/pkg/assets
 
 TAGS ?=
 
@@ -36,7 +36,7 @@ ifndef DATE
 	DATE := $(shell date -u '+%Y%m%d')
 endif
 
-LDFLAGS += -s -w -X "$(IMPORT)/main.VersionDev=$(SHA)" -X "$(IMPORT)/main.VersionDate=$(DATE)"
+LDFLAGS += -s -w -X "$(IMPORT)/pkg/version.VersionDev=$(SHA)" -X "$(IMPORT)/pkg/version.VersionDate=$(DATE)"
 
 .PHONY: all
 all: build
@@ -56,7 +56,7 @@ graph:
 .PHONY: clean
 clean:
 	go clean -i ./...
-	rm -rf $(EXECUTABLE) $(DIST)/binaries $(DIST)/release cmd/$(NAME)/ab0x.go
+	rm -rf $(EXECUTABLE) $(DIST)/binaries $(DIST)/release pkg/assets/ab0x.go
 
 .PHONY: fmt
 fmt:

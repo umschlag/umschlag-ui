@@ -15,7 +15,7 @@ init_cmds = [
     "--log-level",
     "debug",
     "server",
-    "--static",
+    "--static-path",
     "dist/static/"
   ]
 ]
@@ -27,7 +27,7 @@ cmds = [
     "--log-level",
     "debug",
     "server",
-    "--static",
+    "--static-path",
     "dist/static/"
   ]
 ]

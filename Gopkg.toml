@@ -22,40 +22,28 @@
 
 
 [[constraint]]
-  name = "github.com/Sirupsen/logrus"
-  version = "1.0.3"
+  name = "github.com/coreos/go-semver"
+  version = "0.2.0"
 
 [[constraint]]
-  name = "github.com/Unknwon/com"
-  version = "1.0.0"
+  name = "github.com/go-chi/chi"
+  version = "3.3.0"
 
 [[constraint]]
-  branch = "master"
-  name = "github.com/facebookgo/grace"
-
-[[constraint]]
-  name = "github.com/gin-contrib/pprof"
-  version = "1.1.0"
-
-[[constraint]]
-  name = "github.com/gin-gonic/gin"
-  version = "1.2.0"
+  name = "github.com/go-kit/kit"
+  version = "0.6.0"
 
 [[constraint]]
   name = "github.com/joho/godotenv"
-  version = "1.1.0"
+  version = "1.2.0"
+
+[[constraint]]
+  name = "github.com/oklog/oklog"
+  version = "0.2.2"
 
 [[constraint]]
   branch = "master"
   name = "golang.org/x/crypto"
-
-[[constraint]]
-  branch = "master"
-  name = "golang.org/x/net"
-
-[[constraint]]
-  branch = "master"
-  name = "golang.org/x/sync"
 
 [[constraint]]
   branch = "v2"
