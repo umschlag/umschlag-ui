@@ -1,6 +1,8 @@
 NAME := umschlag-ui
-DIST := dist
 IMPORT := github.com/umschlag/$(NAME)/cmd/$(NAME)
+DIST := dist
+
+EXECUTABLE := $(NAME)
 
 ifeq ($(OS), Windows_NT)
 	EXECUTABLE := $(NAME).exe
@@ -10,16 +12,19 @@ endif
 
 PACKAGES ?= $(shell go list ./... | grep -v /vendor/ | grep -v /_tools/)
 SOURCES ?= $(shell find . -name "*.go" -type f -not -path "./vendor/*" -not -path "./_tools/*")
+GENERATE ?= $(IMPORT)
 
 TAGS ?=
 
-ifneq ($(DRONE_TAG),)
-	VERSION ?= $(subst v,,$(DRONE_TAG))
-else
-	ifneq ($(DRONE_BRANCH),)
-		VERSION ?= $(subst release/v,,$(DRONE_BRANCH))
+ifndef VERSION
+	ifneq ($(DRONE_TAG),)
+		VERSION ?= $(subst v,,$(DRONE_TAG))
 	else
-		VERSION ?= master
+		ifneq ($(DRONE_BRANCH),)
+			VERSION ?= $(subst release/v,,$(DRONE_BRANCH))
+		else
+			VERSION ?= master
+		endif
 	endif
 endif
 
@@ -51,7 +56,7 @@ graph:
 .PHONY: clean
 clean:
 	go clean -i ./...
-	rm -rf $(EXECUTABLE) $(DIST)/binaries $(DIST)/release server/bindata.go
+	rm -rf $(EXECUTABLE) $(DIST)/binaries $(DIST)/release cmd/$(NAME)/ab0x.go
 
 .PHONY: fmt
 fmt:
@@ -61,45 +66,17 @@ fmt:
 vet:
 	go vet $(PACKAGES)
 
-.PHONY: generate
-generate:
-	go generate $(PACKAGES)
-
-.PHONY: errcheck
-errcheck:
-	retool do errcheck $(PACKAGES)
-
-.PHONY: varcheck
-varcheck:
-	retool do varcheck $(PACKAGES)
-
-.PHONY: structcheck
-structcheck:
-	retool do structcheck $(PACKAGES)
-
-.PHONY: unconvert
-unconvert:
-	retool do unconvert $(PACKAGES)
-
-.PHONY: interfacer
-interfacer:
-	retool do interfacer $(PACKAGES)
-
-.PHONY: misspell
-misspell:
-	retool misspell $(SOURCES)
-
-.PHONY: ineffassign
-ineffassign:
-	retool do ineffassign -n $(SOURCES)
-
-.PHONY: dupl
-dupl:
-	retool do dupl -t 100 $(SOURCES)
+.PHONY: megacheck
+megacheck:
+	retool do megacheck -tags '$(TAGS)' $(PACKAGES)
 
 .PHONY: lint
 lint:
 	for PKG in $(PACKAGES); do retool do golint -set_exit_status $$PKG || exit 1; done;
+
+.PHONY: generate
+generate:
+	go generate $(GENERATE)
 
 .PHONY: test
 test:

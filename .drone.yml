@@ -24,18 +24,21 @@ pipeline:
   frontend-lint:
     image: webhippie/nodejs:latest
     pull: true
+    group: frontend
     commands:
       - yarn run lint
 
   frontend-test:
     image: webhippie/nodejs:latest
     pull: true
+    group: frontend
     commands:
       - yarn run test
 
   frontend-build:
     image: webhippie/nodejs:latest
     pull: true
+    group: frontend
     commands:
       - yarn run build
 
@@ -54,7 +57,7 @@ pipeline:
   backend-vet:
     image: webhippie/golang:edge
     pull: true
-    group: app
+    group: backend
     environment:
       - CGO_ENABLED=0
       - GOPATH=/srv/app
@@ -65,7 +68,7 @@ pipeline:
   backend-check:
     image: webhippie/golang:edge
     pull: true
-    group: app
+    group: backend
     environment:
       - CGO_ENABLED=0
       - GOPATH=/srv/app
@@ -76,7 +79,7 @@ pipeline:
   backend-lint:
     image: webhippie/golang:edge
     pull: true
-    group: app
+    group: backend
     environment:
       - CGO_ENABLED=0
       - GOPATH=/srv/app
@@ -87,7 +90,7 @@ pipeline:
   backend-test:
     image: webhippie/golang:edge
     pull: true
-    group: app
+    group: backend
     environment:
       - CGO_ENABLED=0
       - GOPATH=/srv/app
@@ -98,7 +101,7 @@ pipeline:
   backend-build:
     image: webhippie/golang:edge
     pull: true
-    group: app
+    group: backend
     environment:
       - CGO_ENABLED=0
       - GOPATH=/srv/app
@@ -174,47 +177,47 @@ pipeline:
       event: push
       branch: master
 
-  # docker-386:
-  #   image: plugins/docker:17.05
-  #   pull: true
-  #   group: docker
-  #   secrets: [ docker_username, docker_password ]
-  #   repo: umschlag/umschlag-ui
-  #   dockerfile: Dockerfile.i386
-  #   tags: [ latest-386 ]
-  #   build_args:
-  #     - VERSION=master
-  #   when:
-  #     event: push
-  #     branch: master
+  docker-386:
+    image: plugins/docker:17.05
+    pull: true
+    group: docker
+    secrets: [ docker_username, docker_password ]
+    repo: umschlag/umschlag-ui
+    dockerfile: Dockerfile.i386
+    tags: [ latest-386 ]
+    build_args:
+      - VERSION=master
+    when:
+      event: push
+      branch: master
 
-  # docker-arm:
-  #   image: plugins/docker:17.05
-  #   pull: true
-  #   group: docker
-  #   secrets: [ docker_username, docker_password ]
-  #   repo: umschlag/umschlag-ui
-  #   dockerfile: Dockerfile.arm
-  #   tags: [ latest-arm ]
-  #   build_args:
-  #     - VERSION=master
-  #   when:
-  #     event: push
-  #     branch: master
+  docker-arm:
+    image: plugins/docker:17.05
+    pull: true
+    group: docker
+    secrets: [ docker_username, docker_password ]
+    repo: umschlag/umschlag-ui
+    dockerfile: Dockerfile.arm
+    tags: [ latest-arm ]
+    build_args:
+      - VERSION=master
+    when:
+      event: push
+      branch: master
 
-  # docker-arm64:
-  #   image: plugins/docker:17.05
-  #   pull: true
-  #   group: docker
-  #   secrets: [ docker_username, docker_password ]
-  #   repo: umschlag/umschlag-ui
-  #   dockerfile: Dockerfile.arm64
-  #   tags: [ latest-arm64 ]
-  #   build_args:
-  #     - VERSION=master
-  #   when:
-  #     event: push
-  #     branch: master
+  docker-arm64:
+    image: plugins/docker:17.05
+    pull: true
+    group: docker
+    secrets: [ docker_username, docker_password ]
+    repo: umschlag/umschlag-ui
+    dockerfile: Dockerfile.arm64
+    tags: [ latest-arm64 ]
+    build_args:
+      - VERSION=master
+    when:
+      event: push
+      branch: master
 
   docker-amd64:
     image: plugins/docker:17.05
@@ -229,50 +232,50 @@ pipeline:
       event: tag
       branch: [ master ]
 
-  # docker-386:
-  #   image: plugins/docker:17.05
-  #   pull: true
-  #   group: docker
-  #   secrets: [ docker_username, docker_password ]
-  #   repo: umschlag/umschlag-ui
-  #   dockerfile: Dockerfile.i386
-  #   auto_tag: true
-  #   auto_tag_suffix: i386
-  #   build_args:
-  #     - VERSION=${DRONE_TAG##v}
-  #   when:
-  #     event: tag
-  #     branch: [ master ]
+  docker-386:
+    image: plugins/docker:17.05
+    pull: true
+    group: docker
+    secrets: [ docker_username, docker_password ]
+    repo: umschlag/umschlag-ui
+    dockerfile: Dockerfile.i386
+    auto_tag: true
+    auto_tag_suffix: i386
+    build_args:
+      - VERSION=${DRONE_TAG##v}
+    when:
+      event: tag
+      branch: [ master ]
 
-  # docker-arm:
-  #   image: plugins/docker:17.05
-  #   pull: true
-  #   group: docker
-  #   secrets: [ docker_username, docker_password ]
-  #   repo: umschlag/umschlag-ui
-  #   dockerfile: Dockerfile.arm
-  #   auto_tag: true
-  #   auto_tag_suffix: arm
-  #   build_args:
-  #     - VERSION=${DRONE_TAG##v}
-  #   when:
-  #     event: tag
-  #     branch: [ master ]
+  docker-arm:
+    image: plugins/docker:17.05
+    pull: true
+    group: docker
+    secrets: [ docker_username, docker_password ]
+    repo: umschlag/umschlag-ui
+    dockerfile: Dockerfile.arm
+    auto_tag: true
+    auto_tag_suffix: arm
+    build_args:
+      - VERSION=${DRONE_TAG##v}
+    when:
+      event: tag
+      branch: [ master ]
 
-  # docker-arm64:
-  #   image: plugins/docker:17.05
-  #   pull: true
-  #   group: docker
-  #   secrets: [ docker_username, docker_password ]
-  #   repo: umschlag/umschlag-ui
-  #   dockerfile: Dockerfile.arm64
-  #   auto_tag: true
-  #   auto_tag_suffix: arm64
-  #   build_args:
-  #     - VERSION=${DRONE_TAG##v}
-  #   when:
-  #     event: tag
-  #     branch: [ master ]
+  docker-arm64:
+    image: plugins/docker:17.05
+    pull: true
+    group: docker
+    secrets: [ docker_username, docker_password ]
+    repo: umschlag/umschlag-ui
+    dockerfile: Dockerfile.arm64
+    auto_tag: true
+    auto_tag_suffix: arm64
+    build_args:
+      - VERSION=${DRONE_TAG##v}
+    when:
+      event: tag
+      branch: [ master ]
 
   docker-microbadger:
     image: plugins/webhook:1
