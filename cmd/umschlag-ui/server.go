@@ -60,14 +60,14 @@ func Server() *cli.Command {
 				Name:        "static-path",
 				Value:       "",
 				Usage:       "folder for serving assets",
-				EnvVars:     []string{"KLEISTER_UI_STATIC"},
+				EnvVars:     []string{"UMSCHLAG_UI_STATIC"},
 				Destination: &config.Server.Static,
 			},
 			&cli.StringFlag{
 				Name:        "storage-path",
 				Value:       "storage/",
 				Usage:       "folder for storing uploads",
-				EnvVars:     []string{"KLEISTER_UI_STORAGE"},
+				EnvVars:     []string{"UMSCHLAG_UI_STORAGE"},
 				Destination: &config.Server.Storage,
 			},
 			&cli.BoolFlag{

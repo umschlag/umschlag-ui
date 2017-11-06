@@ -56,6 +56,12 @@
   revision = "ca1fcd4ab4c10bc58852a894bcf195fab2229efe"
 
 [[projects]]
+  branch = "master"
+  name = "golang.org/x/net"
+  packages = ["context","webdav","webdav/internal/xml"]
+  revision = "01c190206fbdffa42f334f4b2bf2220f50e64920"
+
+[[projects]]
   branch = "v2"
   name = "gopkg.in/urfave/cli.v2"
   packages = ["."]
@@ -64,6 +70,6 @@
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-  inputs-digest = "20d807f69a16c3967cc7c3f00ea8272b5a3b66b7077c9c9462ad7b6ae7929d9f"
+  inputs-digest = "95f5e594fcc3e7a07b16aa661a79c85d37e88a6b8f318a0fce8c9fb0630cb534"
   solver-name = "gps-cdcl"
   solver-version = 1
