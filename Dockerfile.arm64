@@ -18,7 +18,7 @@ COPY --from=alpine /etc/mime.types /etc/
 COPY dist/static /usr/share/umschlag
 
 ARG VERSION
-COPY dist/binaries/umschlag-ui-$VERSION-linux-arm64 /usr/bin/
+COPY dist/binaries/umschlag-ui-$VERSION-linux-arm64 /usr/bin/umschlag-ui
 
 LABEL maintainer="Thomas Boerger <thomas@webhippie.de>"
 LABEL org.label-schema.version=$VERSION
