@@ -4,7 +4,7 @@ import (
 	"net/http"
 	"time"
 
-	"github.com/umschlag/umschlag-api/pkg/version"
+	"github.com/umschlag/umschlag-ui/pkg/version"
 )
 
 // Cache writes required cache headers to all requests.
