@@ -10,25 +10,21 @@ environment:
     secure: 'VqO/G3Zfslu6zSLdwHKO+Q=='
 
 install:
-  - ps: |
-      Install-Product node ''
-  - cmd: |
-      choco install make
-  - cmd: |
-      docker version
-      go version
+  - set PATH=c:\go\bin;%PATH%
+  - Install-Product node ''
+  - choco install make
+  - docker version
+  - go version
 build_script:
-  - cmd: |
-      npm install
-      npm run build
-  - cmd: |
-      make retool generate build
+  - npm install
+  - npm run build
 
-      docker pull microsoft/nanoserver:10.0.14393.1593
-      docker build -f Dockerfile.windows -t umschlag/umschlag-ui:windows .
+  - make retool generate build
+
+  - docker pull microsoft/nanoserver:10.0.14393.1593
+  - docker build -f Dockerfile.windows -t umschlag/umschlag-ui:windows .
 test_script:
-  - cmd: |
-      docker run --rm umschlag/umschlag-ui:windows --help
+  - docker run --rm umschlag/umschlag-ui:windows --help
 deploy_script:
   - ps: |
       $ErrorActionPreference = 'Stop';
