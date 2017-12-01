@@ -1,9 +1,11 @@
 import Vue from 'vue'
-import VueResource from 'vue-resource'
-import { sync } from 'vuex-router-sync'
+import VueAxios from 'vue-axios'
+import Axios from 'axios'
 
 import UIkit from 'uikit'
 import Icons from 'uikit/dist/js/uikit-icons'
+
+import { sync } from 'vuex-router-sync'
 
 import store from './store'
 import router from './router'
@@ -11,7 +13,7 @@ import App from './app.vue'
 import * as filters from './filters'
 
 UIkit.use(Icons)
-Vue.use(VueResource)
+Vue.use(VueAxios, Axios)
 
 sync(
   store,

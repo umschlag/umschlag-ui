@@ -30,4 +30,4 @@ coverage.out
 /dist
 /node_modules
 
-/server/ab0x.go
+/pkg/assets/ab0x.go
