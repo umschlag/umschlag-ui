@@ -22,7 +22,7 @@ build_script:
       npm install
       npm run build
   - cmd: |
-      make generate build
+      make retool generate build
 
       docker pull microsoft/nanoserver:10.0.14393.1593
       docker build -f Dockerfile.windows -t umschlag/umschlag-ui:windows .
