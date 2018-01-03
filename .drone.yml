@@ -25,21 +25,21 @@ pipeline:
     pull: true
     group: frontend
     commands:
-      - yarn run lint
+      - yarn lint
 
   frontend-test:
     image: webhippie/nodejs:latest
     pull: true
     group: frontend
     commands:
-      - yarn run test
+      - yarn test
 
   frontend-build:
     image: webhippie/nodejs:latest
     pull: true
     group: frontend
     commands:
-      - yarn run build
+      - yarn build
 
   backend-prepare:
     image: webhippie/golang:edge
@@ -120,7 +120,7 @@ pipeline:
       - make release-dirs release-windows
     when:
       event: [ push, tag ]
-      branch: [ master, release/* ]
+      branch: master
 
   backend-linux:
     image: karalabe/xgo-latest:latest
@@ -134,7 +134,7 @@ pipeline:
       - make release-dirs release-linux
     when:
       event: [ push, tag ]
-      branch: [ master, release/* ]
+      branch: master
 
   backend-darwin:
     image: karalabe/xgo-latest:latest
@@ -148,7 +148,7 @@ pipeline:
       - make release-dirs release-darwin
     when:
       event: [ push, tag ]
-      branch: [ master, release/* ]
+      branch: master
 
   backend-finish:
     image: webhippie/golang:edge
@@ -161,7 +161,7 @@ pipeline:
       - make release-copy release-check
     when:
       event: [ push, tag ]
-      branch: [ master, release/* ]
+      branch: master
 
   docker-amd64:
     image: plugins/docker:17.05
@@ -221,7 +221,7 @@ pipeline:
         target: plugin_urls
     when:
       event: [ push, tag ]
-      branch: [ master ]
+      branch: master
 
   cache-rebuild:
     image: plugins/s3-cache:1
@@ -235,7 +235,7 @@ pipeline:
     when:
       local: false
       event: [ push ]
-      branch: [ master ]
+      branch: master
 
   cache-flush:
     image: plugins/s3-cache:1
@@ -246,7 +246,7 @@ pipeline:
     when:
       local: false
       event: [ push ]
-      branch: [ master ]
+      branch: master
 
   archive-release:
     image: plugins/s3:1
@@ -258,7 +258,7 @@ pipeline:
     path_style: true
     when:
       event: [ push ]
-      branch: [ master ]
+      branch: master
 
   archive-release:
     image: plugins/s3:1
@@ -270,7 +270,7 @@ pipeline:
     path_style: true
     when:
       event: [ tag ]
-      branch: [ master ]
+      branch: master
 
   github-release:
     image: plugins/github-release:1
@@ -280,12 +280,13 @@ pipeline:
       - dist/release/*
     when:
       event: [ tag ]
-      branch: [ master ]
+      branch: master
 
-  notify-gitter:
-    image: plugins/gitter:1
+  notify-matrix:
+    image: plugins/matrix:1
     pull: true
-    secrets: [ gitter_webhook ]
+    secrets: [ matrix_roomid, matrix_userid, matrix_accesstoken ]
     when:
       local: false
-      status: [ success, failure ]
+      events: [ push, tag ]
+      status: [ changed, failure ]

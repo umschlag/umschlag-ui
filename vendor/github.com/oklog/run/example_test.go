@@ -1,4 +1,4 @@
-package group_test
+package run_test
 
 import (
 	"context"
@@ -8,11 +8,11 @@ import (
 	"net/http"
 	"time"
 
-	"github.com/oklog/oklog/pkg/group"
+	"github.com/oklog/run"
 )
 
 func ExampleGroup_Add_basic() {
-	var g group.Group
+	var g run.Group
 	{
 		cancel := make(chan struct{})
 		g.Add(func() error {
@@ -50,7 +50,7 @@ func ExampleGroup_Add_basic() {
 
 func ExampleGroup_Add_context() {
 	ctx, cancel := context.WithCancel(context.Background())
-	var g group.Group
+	var g run.Group
 	{
 		ctx, cancel := context.WithCancel(ctx) // note: shadowed
 		g.Add(func() error {
@@ -66,7 +66,7 @@ func ExampleGroup_Add_context() {
 }
 
 func ExampleGroup_Add_listener() {
-	var g group.Group
+	var g run.Group
 	{
 		ln, _ := net.Listen("tcp", ":0")
 		g.Add(func() error {

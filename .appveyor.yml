@@ -12,31 +12,54 @@ environment:
 install:
   - ps: |
       Install-Product node ''
-  - cmd: |
+  - ps: |
       choco install make
-  - cmd: |
+  - ps: |
       docker version
       go version
-  - cmd: |
-      set PATH=c:\go\bin;%PATH%
+
 build_script:
   - cmd: |
-      npm install
-      npm run build
+      yarn install
   - cmd: |
-      make retool generate build
-
+      yarn run build
+  - cmd: |
+      make retool
+  - cmd: |
+      make generate
+  - cmd: |
+      make build
+  - cmd: |
       docker pull microsoft/nanoserver:10.0.14393.1593
       docker build -f Dockerfile.windows -t umschlag/umschlag-ui:windows .
+
 test_script:
   - cmd: |
       docker run --rm umschlag/umschlag-ui:windows --help
+
 deploy_script:
   - ps: |
-      $ErrorActionPreference = 'Stop';
-      if ( $env:APPVEYOR_PULL_REQUEST_NUMBER -Or ! $env:APPVEYOR_REPO_BRANCH.Equals("master")) {
+      if ( $env:APPVEYOR_PULL_REQUEST_NUMBER ) {
         Write-Host Nothing to deploy.
       } else {
         docker login --username $env:DOCKER_USERNAME --password $env:DOCKER_PASSWORD
-        docker push umschlag/umschlag-ui:windows
+
+        if ( $env:APPVEYOR_REPO_TAG -eq 'true' ) {
+          $major,$minor,$patch = $env:APPVEYOR_REPO_TAG_NAME.substring(1).split('.')
+
+          docker push umschlag/umschlag-ui:windows
+
+          docker tag umschlag/umschlag-ui:windows umschlag/umschlag-ui:$major.$minor.$patch-windows
+          docker push umschlag/umschlag-ui:$major.$minor.$patch-windows
+
+          docker tag umschlag/umschlag-ui:windows umschlag/umschlag-ui:$major.$minor-windows
+          docker push umschlag/umschlag-ui:$major.$minor-windows
+
+          docker tag umschlag/umschlag-ui:windows umschlag/umschlag-ui:$major-windows
+          docker push umschlag/umschlag-ui:$major-windows
+        } else {
+          if ( $env:APPVEYOR_REPO_BRANCH -eq 'master' ) {
+            docker push umschlag/umschlag-ui:windows
+          }
+        }
       }

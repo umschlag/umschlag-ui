@@ -2,7 +2,7 @@
   "private": true,
   "name": "umschlag-ui",
   "version": "0.0.0",
-  "description": "UI for Umschlag, a docker distribution management system",
+  "description": "Docker distribution management system",
   "homepage": "https://github.com/umschlag/umschlag-ui#readme",
   "license": "Apache-2.0",
   "author": "Thomas Boerger <thomas@webhippie.de>",

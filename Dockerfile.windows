@@ -7,10 +7,10 @@ LABEL maintainer="Thomas Boerger <thomas@webhippie.de>" `
   org.label-schema.schema-version="1.0"
 
 EXPOSE 9000 80 443
-VOLUME ["\\umschlag"]
+VOLUME ["\\storage"]
 
 ENV UMSCHLAG_UI_ASSETS /assets
-ENV UMSCHLAG_UI_STORAGE /umschlag
+ENV UMSCHLAG_UI_STORAGE /storage
 
 ENTRYPOINT ["\\umschlag-ui.exe"]
 CMD ["server"]

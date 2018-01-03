@@ -14,6 +14,7 @@ import (
 	"github.com/go-kit/kit/log/level"
 	"github.com/pkg/errors"
 	"github.com/prometheus/client_golang/prometheus"
+	"github.com/rs/cors"
 
 	"github.com/oklog/oklog/pkg/cluster"
 	"github.com/oklog/oklog/pkg/fs"
@@ -228,9 +229,7 @@ func runIngest(args []string) error {
 	var fsys fs.Filesystem
 	switch strings.ToLower(*filesystem) {
 	case "real":
-		fsys = fs.NewRealFilesystem(false)
-	case "real-mmap":
-		fsys = fs.NewRealFilesystem(true)
+		fsys = fs.NewRealFilesystem()
 	case "virtual":
 		fsys = fs.NewVirtualFilesystem()
 	case "nop":
@@ -330,7 +329,7 @@ func runIngest(args []string) error {
 			)))
 			registerMetrics(mux)
 			registerProfile(mux)
-			return http.Serve(apiListener, mux)
+			return http.Serve(apiListener, cors.Default().Handler(mux))
 		}, func(error) {
 			apiListener.Close()
 		})

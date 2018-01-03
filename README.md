@@ -23,7 +23,7 @@ following command after NodeJS setup:
 
 ```
 yarn install
-yarn run build
+yarn build
 ```
 
 If you also want to publish it as a single binary with our server based on Go
@@ -53,8 +53,8 @@ a NodeJS environment or even a Go environment is out of the scope of this
 document. To start development just execute those commands:
 
 ```
-npm install
-npm run watch
+yarn install
+yarn watch
 ./umschlag-ui --debug server --static dist/static/
 ```
 

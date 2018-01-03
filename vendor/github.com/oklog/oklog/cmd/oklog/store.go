@@ -14,6 +14,7 @@ import (
 	"github.com/go-kit/kit/log/level"
 	"github.com/pkg/errors"
 	"github.com/prometheus/client_golang/prometheus"
+	"github.com/rs/cors"
 
 	"github.com/oklog/oklog/pkg/cluster"
 	"github.com/oklog/oklog/pkg/fs"
@@ -184,9 +185,7 @@ func runStore(args []string) error {
 	var fsys fs.Filesystem
 	switch strings.ToLower(*filesystem) {
 	case "real":
-		fsys = fs.NewRealFilesystem(false)
-	case "real-mmap":
-		fsys = fs.NewRealFilesystem(true)
+		fsys = fs.NewRealFilesystem()
 	case "virtual":
 		fsys = fs.NewVirtualFilesystem()
 	case "nop":
@@ -194,7 +193,12 @@ func runStore(args []string) error {
 	default:
 		return errors.Errorf("invalid -filesystem %q", *filesystem)
 	}
-	storeLog, err := store.NewFileLog(fsys, *storePath, *segmentTargetSize, *segmentBufferSize)
+	storeLog, err := store.NewFileLog(
+		fsys,
+		*storePath,
+		*segmentTargetSize, *segmentBufferSize,
+		store.LogReporter{Logger: log.With(logger, "component", "FileLog")},
+	)
 	if err != nil {
 		return err
 	}
@@ -260,7 +264,7 @@ func runStore(args []string) error {
 			consumedBytes,
 			replicatedSegments.WithLabelValues("egress"),
 			replicatedBytes.WithLabelValues("egress"),
-			log.With(logger, "component", "Consumer"),
+			store.LogReporter{Logger: log.With(logger, "component", "Consumer")},
 		)
 		g.Add(func() error {
 			c.Run()
@@ -278,7 +282,7 @@ func runStore(args []string) error {
 			compactDuration,
 			trashedSegments,
 			purgedSegments,
-			log.With(logger, "component", "Compacter"),
+			store.LogReporter{Logger: log.With(logger, "component", "Compacter")},
 		)
 		g.Add(func() error {
 			c.Run()
@@ -298,7 +302,7 @@ func runStore(args []string) error {
 				replicatedSegments.WithLabelValues("ingress"),
 				replicatedBytes.WithLabelValues("ingress"),
 				apiDuration,
-				logger,
+				store.LogReporter{Logger: log.With(logger, "component", "API")},
 			)
 			defer func() {
 				if err := api.Close(); err != nil {
@@ -309,7 +313,7 @@ func runStore(args []string) error {
 			mux.Handle("/ui/", ui.NewAPI(logger, *uiLocal))
 			registerMetrics(mux)
 			registerProfile(mux)
-			return http.Serve(apiListener, mux)
+			return http.Serve(apiListener, cors.Default().Handler(mux))
 		}, func(error) {
 			apiListener.Close()
 		})

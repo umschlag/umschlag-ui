@@ -10,8 +10,8 @@
 [[projects]]
   name = "github.com/go-chi/chi"
   packages = [".","middleware"]
-  revision = "f7c66f685bcab06bcce78ac212c5f3553c063d19"
-  version = "v3.3.0"
+  revision = "e83ac2304db3c50cf03d96a2fcd39009d458bc35"
+  version = "v3.3.2"
 
 [[projects]]
   name = "github.com/go-kit/kit"
@@ -28,8 +28,8 @@
 [[projects]]
   name = "github.com/go-stack/stack"
   packages = ["."]
-  revision = "817915b46b97fd7bb80e8ab6b69f01a53ac3eebf"
-  version = "v1.6.0"
+  revision = "259ab82a6cad3992b4e21ff5cac294ccb06474bc"
+  version = "v1.7.0"
 
 [[projects]]
   name = "github.com/joho/godotenv"
@@ -46,20 +46,26 @@
 [[projects]]
   name = "github.com/oklog/oklog"
   packages = ["pkg/group"]
-  revision = "fca58330910eb7fe6267788eddf879b1d6811176"
-  version = "v0.2.2"
+  revision = "2ae37025d0eeba31e5b70420277a9533a9d5e900"
+  version = "v0.3.0"
+
+[[projects]]
+  name = "github.com/oklog/run"
+  packages = ["."]
+  revision = "4dadeb3030eda0273a12382bb2348ffc7c9d1a39"
+  version = "v1.0.0"
 
 [[projects]]
   branch = "master"
   name = "golang.org/x/crypto"
   packages = ["acme","acme/autocert"]
-  revision = "ca1fcd4ab4c10bc58852a894bcf195fab2229efe"
+  revision = "0fcca4842a8d74bfddc2c96a073bd2a4d2a7a2e8"
 
 [[projects]]
   branch = "master"
   name = "golang.org/x/net"
   packages = ["context","webdav","webdav/internal/xml"]
-  revision = "01c190206fbdffa42f334f4b2bf2220f50e64920"
+  revision = "d866cfc389cec985d6fda2859936a575a55a3ab6"
 
 [[projects]]
   branch = "v2"
@@ -70,6 +76,6 @@
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-  inputs-digest = "95f5e594fcc3e7a07b16aa661a79c85d37e88a6b8f318a0fce8c9fb0630cb534"
+  inputs-digest = "bd21e9a49351ab58af3ad4ef9ce32095aed5fea1965e1808ba14227ffc0e13e1"
   solver-name = "gps-cdcl"
   solver-version = 1
