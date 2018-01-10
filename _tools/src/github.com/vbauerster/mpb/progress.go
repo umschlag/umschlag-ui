@@ -3,7 +3,6 @@ package mpb
 import (
 	"io"
 	"os"
-	"runtime"
 	"sync"
 	"time"
 
@@ -11,7 +10,7 @@ import (
 )
 
 type (
-	// BeforeRender is a func, which gets called before render process
+	// BeforeRender is a func, which gets called before each rendering cycle
 	BeforeRender func([]*Bar)
 
 	widthSync struct {
@@ -19,10 +18,11 @@ type (
 		Result []chan int
 	}
 
-	// progress config, fields are adjustable by user indirectly
-	pConf struct {
+	// progress state, which may contain several bars
+	pState struct {
 		bars []*Bar
 
+		idCounter    int
 		width        int
 		format       string
 		rr           time.Duration
@@ -57,49 +57,49 @@ type Progress struct {
 	quit chan struct{}
 	// done channel is receiveable after p.server has been quit
 	done chan struct{}
-	ops  chan func(*pConf)
+	ops  chan func(*pState)
 }
 
 // New creates new Progress instance, which orchestrates bars rendering process.
 // Accepts mpb.ProgressOption funcs for customization.
 func New(options ...ProgressOption) *Progress {
-	// defaults
-	conf := pConf{
+	s := &pState{
 		bars:   make([]*Bar, 0, 3),
 		width:  pwidth,
 		format: pformat,
 		cw:     cwriter.New(os.Stdout),
 		rr:     prr,
 		ticker: time.NewTicker(prr),
+		cancel: make(chan struct{}),
 	}
 
 	for _, opt := range options {
-		opt(&conf)
+		opt(s)
 	}
 
 	p := &Progress{
-		ewg:  conf.ewg,
+		ewg:  s.ewg,
 		wg:   new(sync.WaitGroup),
 		done: make(chan struct{}),
-		ops:  make(chan func(*pConf)),
+		ops:  make(chan func(*pState)),
 		quit: make(chan struct{}),
 	}
-	go p.server(conf)
+	go p.server(s)
 	return p
 }
 
 // AddBar creates a new progress bar and adds to the container.
 func (p *Progress) AddBar(total int64, options ...BarOption) *Bar {
+	p.wg.Add(1)
 	result := make(chan *Bar, 1)
-	op := func(c *pConf) {
-		options = append(options, barWidth(c.width), barFormat(c.format))
-		b := newBar(total, p.wg, c.cancel, options...)
-		c.bars = append(c.bars, b)
-		p.wg.Add(1)
-		result <- b
-	}
 	select {
-	case p.ops <- op:
+	case p.ops <- func(s *pState) {
+		options = append(options, barWidth(s.width), barFormat(s.format))
+		b := newBar(s.idCounter, total, p.wg, s.cancel, options...)
+		s.bars = append(s.bars, b)
+		s.idCounter++
+		result <- b
+	}:
 		return <-result
 	case <-p.quit:
 		return new(Bar)
@@ -109,20 +109,19 @@ func (p *Progress) AddBar(total int64, options ...BarOption) *Bar {
 // RemoveBar removes bar at any time.
 func (p *Progress) RemoveBar(b *Bar) bool {
 	result := make(chan bool, 1)
-	op := func(c *pConf) {
+	select {
+	case p.ops <- func(s *pState) {
 		var ok bool
-		for i, bar := range c.bars {
+		for i, bar := range s.bars {
 			if bar == b {
 				bar.Complete()
-				c.bars = append(c.bars[:i], c.bars[i+1:]...)
+				s.bars = append(s.bars[:i], s.bars[i+1:]...)
 				ok = true
 				break
 			}
 		}
 		result <- ok
-	}
-	select {
-	case p.ops <- op:
+	}:
 		return <-result
 	case <-p.quit:
 		return false
@@ -132,11 +131,10 @@ func (p *Progress) RemoveBar(b *Bar) bool {
 // BarCount returns bars count
 func (p *Progress) BarCount() int {
 	result := make(chan int, 1)
-	op := func(c *pConf) {
-		result <- len(c.bars)
-	}
 	select {
-	case p.ops <- op:
+	case p.ops <- func(s *pState) {
+		result <- len(s.bars)
+	}:
 		return <-result
 	case <-p.quit:
 		return 0
@@ -144,7 +142,7 @@ func (p *Progress) BarCount() int {
 }
 
 // Stop is a way to gracefully shutdown mpb's rendering goroutine.
-// It is NOT for cancelation (use mpb.WithContext for cancelation purposes).
+// It is NOT for cancellation (use mpb.WithContext for cancellation purposes).
 // If *sync.WaitGroup has been provided via mpb.WithWaitGroup(), its Wait()
 // method will be called first.
 func (p *Progress) Stop() {
@@ -155,12 +153,6 @@ func (p *Progress) Stop() {
 	case <-p.quit:
 		return
 	default:
-		// complete Total unknown bars
-		p.ops <- func(c *pConf) {
-			for _, b := range c.bars {
-				b.complete()
-			}
-		}
 		// wait for all bars to quit
 		p.wg.Wait()
 		// request p.server to quit
@@ -175,70 +167,6 @@ func (p *Progress) quitRequest() {
 	case <-p.quit:
 	default:
 		close(p.quit)
-	}
-}
-
-// server monitors underlying channels and renders any progress bars
-func (p *Progress) server(conf pConf) {
-
-	defer func() {
-		if conf.shutdownNotifier != nil {
-			close(conf.shutdownNotifier)
-		}
-		close(p.done)
-	}()
-
-	for {
-		select {
-		case op := <-p.ops:
-			op(&conf)
-		case <-conf.ticker.C:
-			numBars := len(conf.bars)
-			if numBars == 0 {
-				runtime.Gosched()
-				break
-			}
-
-			if conf.beforeRender != nil {
-				conf.beforeRender(conf.bars)
-			}
-
-			wSyncTimeout := make(chan struct{})
-			time.AfterFunc(conf.rr, func() {
-				close(wSyncTimeout)
-			})
-
-			b0 := conf.bars[0]
-			prependWs := newWidthSync(wSyncTimeout, numBars, b0.NumOfPrependers())
-			appendWs := newWidthSync(wSyncTimeout, numBars, b0.NumOfAppenders())
-
-			tw, _, _ := cwriter.GetTermSize()
-
-			flushed := make(chan struct{})
-			sequence := make([]<-chan []byte, numBars)
-			for i, b := range conf.bars {
-				sequence[i] = b.render(tw, flushed, prependWs, appendWs)
-			}
-
-			for buf := range fanIn(sequence...) {
-				conf.cw.Write(buf)
-			}
-
-			for _, interceptor := range conf.interceptors {
-				interceptor(conf.cw)
-			}
-
-			conf.cw.Flush()
-			close(flushed)
-		case <-conf.cancel:
-			conf.ticker.Stop()
-			conf.cancel = nil
-		case <-p.quit:
-			if conf.cancel != nil {
-				conf.ticker.Stop()
-			}
-			return
-		}
 	}
 }
 
@@ -279,8 +207,50 @@ func newWidthSync(timeout <-chan struct{}, numBars, numColumn int) *widthSync {
 	return ws
 }
 
-func fanIn(inputs ...<-chan []byte) <-chan []byte {
-	ch := make(chan []byte)
+func (s *pState) writeAndFlush(tw, numP, numA int) (err error) {
+	if numP < 0 && numA < 0 {
+		return
+	}
+	if s.beforeRender != nil {
+		s.beforeRender(s.bars)
+	}
+
+	wSyncTimeout := make(chan struct{})
+	time.AfterFunc(s.rr, func() {
+		close(wSyncTimeout)
+	})
+
+	prependWs := newWidthSync(wSyncTimeout, len(s.bars), numP)
+	appendWs := newWidthSync(wSyncTimeout, len(s.bars), numA)
+
+	sequence := make([]<-chan *bufReader, len(s.bars))
+	for i, b := range s.bars {
+		sequence[i] = b.render(tw, prependWs, appendWs)
+	}
+
+	var i int
+	for r := range fanIn(sequence...) {
+		_, err = s.cw.ReadFrom(r)
+		defer func(bar *Bar, complete bool) {
+			if complete {
+				bar.Complete()
+			}
+		}(s.bars[i], r.complete)
+		i++
+	}
+
+	for _, interceptor := range s.interceptors {
+		interceptor(s.cw)
+	}
+
+	if e := s.cw.Flush(); err == nil {
+		err = e
+	}
+	return
+}
+
+func fanIn(inputs ...<-chan *bufReader) <-chan *bufReader {
+	ch := make(chan *bufReader)
 
 	go func() {
 		defer close(ch)

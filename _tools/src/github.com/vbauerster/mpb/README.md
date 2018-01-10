@@ -9,28 +9,26 @@
 
 ## Features
 
-* __Multiple Bars__: mpb can render multiple progress bars that can be tracked concurrently
-* __Cancellable__: cancel rendering goroutine at any time
-* __Dynamic Addition__:  Add additional progress bar at any time
-* __Dynamic Removal__:  Remove rendering progress bar at any time
-* __Dynamic Sorting__:  Sort bars as you wish
-* __Dynamic Resize__:  Resize bars on terminal width change
-* __Custom Decorator Functions__: Add custom functions around the bar along with helper functions
-* __Dynamic Decorator's Width Sync__:  Sync width among decorator group (available since v2)
+* __Multiple Bars__: Multiple progress bars are supported
+* __Dynamic Total__: [Set total](https://github.com/vbauerster/mpb/issues/9#issuecomment-344448984) while bar is running
+* __Dynamic Addition__: Additional bar could be added at later time
+* __Dynamic Removal__: Remove particular bar, before or after completion
+* __Dynamic Resize__: Adaptive bar resize (doesn't work inside tmux)
+* __Cancellation__: Cancel whole rendering process
 * __Predefined Decoratros__: Elapsed time, [Ewmaest](https://github.com/dgryski/trifles/tree/master/ewmaest) based ETA, Percentage, Bytes counter
+* __Decorator's width sync__:  Synchronized decorator's width among multiple bars
 
 ## Installation
 
-To get the package, execute:
-
 ```sh
-go get gopkg.in/vbauerster/mpb.v3
+go get github.com/vbauerster/mpb
 ```
+
+_Note:_ it is preferable to go get from github.com, rather than gopkg.in. See issue [#11](https://github.com/vbauerster/mpb/issues/11).
 
 ## Usage
 
-Following is the simplest use case:
-
+#### [Rendering single bar](examples/singleBar/main.go)
 ```go
 	p := mpb.New(
 		// override default (80) width
@@ -69,13 +67,7 @@ Following is the simplest use case:
 	p.Stop()
 ```
 
-Running [this](examples/singleBar/main.go), will produce:
-
-![gif](examples/gifs/single.gif)
-
-However **mpb** was designed with concurrency in mind. Each new bar renders in its
-own goroutine, therefore adding multiple bars is easy and safe:
-
+#### [Rendering multiple bars](examples/simple/main.go)
 ```go
 	var wg sync.WaitGroup
 	p := mpb.New(mpb.WithWaitGroup(&wg))
@@ -110,42 +102,18 @@ own goroutine, therefore adding multiple bars is easy and safe:
 	p.Stop()
 ```
 
-![simple.gif](examples/gifs/simple.gif)
+#### [Dynamic Total](examples/dynTotal/main.go)
 
-The source code: [examples/simple/main.go](examples/simple/main.go)
+![dynTotal.gif](examples/gifs/dynTotal.gif)
 
-### Cancel
-
-![cancel.gif](examples/gifs/cancel.gif)
-
-The source code: [examples/cancel/main.go](examples/cancel/main.go)
-
-### Removing bar
-
-![remove.gif](examples/gifs/remove.gif)
-
-The source code: [examples/remove/main.go](examples/remove/main.go)
-
-### Sorting bars by progress
-
-![sort.gif](examples/gifs/sort.gif)
-
-The source code: [examples/sort/main.go](examples/sort/main.go)
-
-### Resizing bars on terminal width change
+#### [Adaptive resize](examples/prependETA/main.go)
 
 ![resize.gif](examples/gifs/resize.gif)
 
-The source code: [examples/prependETA/main.go](examples/prependETA/main.go)
+_Note:_ don't expect much, it corrupts if resizing too fast.
 
-### Multiple io
+#### [Bytes counter decorator](examples/io/multiple/main.go)
 
 ![io-multiple.gif](examples/gifs/io-multiple.gif)
 
-The source code: [examples/io/multiple/main.go](examples/io/multiple/main.go)
-
-## License
-
-[BSD 3-Clause](https://opensource.org/licenses/BSD-3-Clause)
-
-The typeface used in screen shots: [Iosevka](https://be5invis.github.io/Iosevka)
+Typeface used in screen shots: [Iosevka](https://be5invis.github.io/Iosevka)
