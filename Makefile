@@ -2,8 +2,6 @@ NAME := umschlag-ui
 IMPORT := github.com/umschlag/$(NAME)
 DIST := dist
 
-EXECUTABLE := $(NAME)
-
 ifeq ($(OS), Windows_NT)
 	EXECUTABLE := $(NAME).exe
 	HAS_RETOOL := $(shell where retool)
