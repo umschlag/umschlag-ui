@@ -49,10 +49,6 @@ update:
 sync:
 	retool do dep ensure
 
-.PHONY: graph
-graph:
-	retool do dep status -dot | dot -T png -o docs/deps.png
-
 .PHONY: clean
 clean:
 	go clean -i ./...
