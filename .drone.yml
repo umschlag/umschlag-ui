@@ -51,6 +51,7 @@ pipeline:
     commands:
       - make clean
       - make retool
+      - make sync
       - make generate
 
   backend-vet:

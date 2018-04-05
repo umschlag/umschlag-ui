@@ -21,7 +21,7 @@ ifndef VERSION
 		VERSION ?= $(subst v,,$(DRONE_TAG))
 	else
 		ifneq ($(DRONE_BRANCH),)
-			VERSION ?= $(DRONE_BRANCH)
+			VERSION ?= 0.0.0-$(subst /,,$(DRONE_BRANCH))
 		else
 			VERSION ?= 0.0.0-master
 		endif
@@ -47,7 +47,6 @@ update:
 
 .PHONY: sync
 sync:
-	retool sync
 	retool do dep ensure
 
 .PHONY: graph
@@ -143,4 +142,5 @@ retool:
 ifndef HAS_RETOOL
 	go get -u github.com/twitchtv/retool
 endif
+	retool sync
 	retool build
