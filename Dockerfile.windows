@@ -16,4 +16,4 @@ ENTRYPOINT ["c:\\umschlag-ui.exe"]
 CMD ["server"]
 
 COPY dist/static c:\assets
-COPY umschlag-ui.exe c:\umschlag-ui.exe
+COPY bin/umschlag-ui.exe c:\umschlag-ui.exe

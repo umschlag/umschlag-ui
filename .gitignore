@@ -25,7 +25,6 @@ _testmain.go
 
 coverage.out
 
-/umschlag-ui
-
+/bin
 /dist
 /node_modules
