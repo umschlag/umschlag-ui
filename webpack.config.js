@@ -70,7 +70,7 @@ module.exports = {
         test: /\.(woff|woff2)(\?v=\d+\.\d+\.\d+)?$/,
         loader: 'file-loader',
         options: {
-          name: 'fonts/[name].[ext]',
+          name: '/assets/fonts/[name].[ext]',
           mimetype: 'application/font-woff'
         }
       },
@@ -78,7 +78,7 @@ module.exports = {
         test: /\.otf(\?v=\d+\.\d+\.\d+)?$/,
         loader: 'file-loader',
         options: {
-          name: 'fonts/[name].[ext]',
+          name: '/assets/fonts/[name].[ext]',
           mimetype: 'application/x-font-opentype'
         }
       },
@@ -86,7 +86,7 @@ module.exports = {
         test: /\.svg(\?v=\d+\.\d+\.\d+)?$/,
         loader: 'file-loader',
         options: {
-          name: 'fonts/[name].[ext]',
+          name: '/assets/fonts/[name].[ext]',
           mimetype: 'image/svg+xml'
         }
       },
@@ -94,7 +94,7 @@ module.exports = {
         test: /\.ttf(\?v=\d+\.\d+\.\d+)?$/,
         loader: 'file-loader',
         options: {
-          name: 'fonts/[name].[ext]',
+          name: '/assets/fonts/[name].[ext]',
           mimetype: 'application/octet-stream'
         }
       },
@@ -102,7 +102,7 @@ module.exports = {
         test: /\.eot(\?v=\d+\.\d+\.\d+)?$/,
         loader: 'file-loader',
         options: {
-          name: 'fonts/[name].[ext]',
+          name: '/assets/fonts/[name].[ext]',
           mimetype: 'application/vnd.ms-fontobject'
         }
       }
