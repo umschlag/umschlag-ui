@@ -1,6 +1,6 @@
 # Umschlag: Web UI
 
-[![Build Status](http://github.dronehippie.de/api/badges/umschlag/umschlag-ui/status.svg)](http://github.dronehippie.de/umschlag/umschlag-ui)
+[![Build Status](http://drone.umschlag.tech/api/badges/umschlag/umschlag-ui/status.svg)](http://drone.umschlag.tech/umschlag/umschlag-ui)
 [![Stories in Ready](https://badge.waffle.io/umschlag/umschlag-api.svg?label=ready&title=Ready)](http://waffle.io/umschlag/umschlag-api)
 [![Join the Matrix chat at https://matrix.to/#/#umschlag:matrix.org](https://img.shields.io/badge/matrix-%23umschlag%3Amatrix.org-7bc9a4.svg)](https://matrix.to/#/#umschlag:matrix.org)
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/2320c92f27404b51a9f57ac6b6da9aff)](https://www.codacy.com/app/umschlag/umschlag-ui?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=umschlag/umschlag-ui&amp;utm_campaign=Badge_Grade)
