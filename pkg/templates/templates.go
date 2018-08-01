@@ -7,10 +7,10 @@ import (
 	"path/filepath"
 	"strings"
 
+	"github.com/Masterminds/sprig"
 	"github.com/rs/zerolog/log"
 	"github.com/umschlag/umschlag-ui/pkg/assets"
 	"github.com/umschlag/umschlag-ui/pkg/config"
-	"github.com/Masterminds/sprig"
 )
 
 // Load loads the template to make it parseable.

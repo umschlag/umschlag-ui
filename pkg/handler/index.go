@@ -5,8 +5,8 @@ import (
 
 	"github.com/rs/zerolog/log"
 	"github.com/umschlag/umschlag-ui/pkg/config"
-	"github.com/webhippie/fail"
 	"github.com/umschlag/umschlag-ui/pkg/templates"
+	"github.com/webhippie/fail"
 )
 
 // Index renders the general template on all routes.

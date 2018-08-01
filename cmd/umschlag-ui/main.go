@@ -5,9 +5,9 @@ import (
 	"strings"
 	"time"
 
-	"github.com/rs/zerolog/log"
-	"github.com/rs/zerolog"
 	"github.com/joho/godotenv"
+	"github.com/rs/zerolog"
+	"github.com/rs/zerolog/log"
 	"github.com/umschlag/umschlag-ui/pkg/config"
 	"github.com/umschlag/umschlag-ui/pkg/version"
 	"gopkg.in/urfave/cli.v2"
