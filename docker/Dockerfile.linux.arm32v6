@@ -8,11 +8,9 @@ LABEL maintainer="Thomas Boerger <thomas@webhippie.de>" \
   org.label-schema.vendor="Thomas Boerger" \
   org.label-schema.schema-version="1.0"
 
-EXPOSE 9000 80 443
-VOLUME ["/var/lib/umschlag"]
+EXPOSE 9000 9010
 
 ENV UMSCHLAG_UI_ASSETS /usr/share/umschlag
-ENV UMSCHLAG_UI_STORAGE /var/lib/umschlag
 
 ENTRYPOINT ["/usr/bin/umschlag-ui"]
 CMD ["server"]
@@ -21,4 +19,4 @@ COPY --from=build /etc/ssl/certs/ca-certificates.crt /etc/ssl/certs/
 COPY --from=build /etc/mime.types /etc/
 
 COPY dist/static /usr/share/umschlag
-COPY dist/binaries/umschlag-ui-*-linux-386 /usr/bin/umschlag-ui
+COPY dist/binaries/umschlag-ui-*-linux-arm-6 /usr/bin/umschlag-ui

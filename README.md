@@ -1,8 +1,9 @@
 # Umschlag: Web UI
 
 [![Build Status](http://drone.umschlag.tech/api/badges/umschlag/umschlag-ui/status.svg)](http://drone.umschlag.tech/umschlag/umschlag-ui)
+[![Build Status](https://ci.appveyor.com/api/projects/status/qx9vv991qob2p0dn?svg=true)](https://ci.appveyor.com/project/umschlagz/umschlag-ui)
 [![Stories in Ready](https://badge.waffle.io/umschlag/umschlag-api.svg?label=ready&title=Ready)](http://waffle.io/umschlag/umschlag-api)
-[![Join the Matrix chat at https://matrix.to/#/#umschlag:matrix.org](https://img.shields.io/badge/matrix-%23umschlag%3Amatrix.org-7bc9a4.svg)](https://matrix.to/#/#umschlag:matrix.org)
+[![Join the Matrix chat at https://matrix.to/#/#umschlag:matrix.org](https://img.shields.io/badge/matrix-%23umschlag-7bc9a4.svg)](https://matrix.to/#/#umschlag:matrix.org)
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/2320c92f27404b51a9f57ac6b6da9aff)](https://www.codacy.com/app/umschlag/umschlag-ui?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=umschlag/umschlag-ui&amp;utm_campaign=Badge_Grade)
 [![Go Doc](https://godoc.org/github.com/umschlag/umschlag-ui?status.svg)](http://godoc.org/github.com/umschlag/umschlag-ui)
 [![Go Report](http://goreportcard.com/badge/github.com/umschlag/umschlag-ui)](http://goreportcard.com/report/github.com/umschlag/umschlag-ui)
@@ -10,9 +11,14 @@
 
 **This project is under heavy development, it's not in a working state yet!**
 
-Where does this name come from or what does it mean? It's quite simple, it's one german word for transshipment, I thought it's a good match as it is related to containers and a harbor.
+Within this repository we are building the web interface for our [Umschlag API](https://github.com/umschlag/umschlag-api) server, for further information take a look at our [documentation](https://umschlag.tech).
 
-Within this repository we are building the web interface for our [Umschlag API](https://github.com/umschlag/umschlag-api) server, for further information take a look at our [documentation](https://umschlag.webhippie.de).
+*Where does this name come from or what does it mean? It's quite simple, it's one german word for transshipment, I thought it's a good match as it is related to containers and a harbor.*
+
+
+## Install
+
+You can download prebuilt binaries from the GitHub releases or from our [download site](http://dl.umschlag.tech/ui). You are a Mac user? Just take a look at our [homebrew formula](https://github.com/umschlag/homebrew-umschlag).
 
 
 ## Build
@@ -29,9 +35,20 @@ If you also want to publish it as a single binary with our server based on Go ma
 ```bash
 go get -d github.com/umschlag/umschlag-ui
 cd $GOPATH/src/github.com/umschlag/umschlag-ui
-make generate build
 
-./umschlag-ui -h
+# install retool
+make retool
+
+# sync dependencies
+make sync
+
+# generate code
+make generate
+
+# build binary
+make build
+
+./bin/umschlag-ui -h
 ```
 
 With the `make generate` command we are embedding all the static assets into the binary so there is no need for any webserver or anything else beside launching this binary.
@@ -45,10 +62,11 @@ To start developing on this UI you have to execute only a few commands. To setup
 yarn install
 yarn watch
 
-./umschlag-ui --log-level debug server --static dist/static/
+make retool sync generate build
+./bin/umschlag-ui --log-level debug server --static dist/static/
 ```
 
-The development server reloads the used assets on every request. So in order to properly work with it you need to start the API separately. After launching this command on a terminal you can access the web interface at [http://localhost:9000](http://localhost:9000).
+The development server reloads the used assets on every request. To properly work with it you need to start the [API server](https://github.com/umschlag/umschlag-api) separately since this project doesn't include it. After launching this command on a terminal you can access the web interface at [http://localhost:9000](http://localhost:9000).
 
 
 ## Security
