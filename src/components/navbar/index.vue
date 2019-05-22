@@ -4,7 +4,7 @@
       <nav class="uk-navbar">
         <div class="uk-navbar-left">
           <router-link class="uk-navbar-item uk-logo" to="/">
-            <canvas class="uk-margin-small-right" width="28" height="34" uk-svg src="/assets/images/logo.svg"></canvas>
+            <canvas class="uk-margin-small-right" width="28" height="34" uk-svg src="../..//images/logo.svg"></canvas>
             Umschlag
           </router-link>
         </div>

@@ -1,8 +1,8 @@
 package handler
 
 import (
-	"fmt"
 	"net/http"
+	"path"
 
 	"github.com/umschlag/umschlag-ui/pkg/assets"
 	"github.com/umschlag/umschlag-ui/pkg/config"
@@ -11,9 +11,9 @@ import (
 // Static handles the delivery of all static assets.
 func Static(cfg *config.Config) http.Handler {
 	return http.StripPrefix(
-		fmt.Sprintf(
-			"%sassets",
+		path.Join(
 			cfg.Server.Root,
+			"assets",
 		),
 		http.FileServer(
 			assets.Load(cfg),

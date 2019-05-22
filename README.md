@@ -1,7 +1,6 @@
 # Umschlag: Web UI
 
 [![Build Status](http://drone.umschlag.tech/api/badges/umschlag/umschlag-ui/status.svg)](http://drone.umschlag.tech/umschlag/umschlag-ui)
-[![Build Status](https://ci.appveyor.com/api/projects/status/qx9vv991qob2p0dn?svg=true)](https://ci.appveyor.com/project/umschlagz/umschlag-ui)
 [![Stories in Ready](https://badge.waffle.io/umschlag/umschlag-api.svg?label=ready&title=Ready)](http://waffle.io/umschlag/umschlag-api)
 [![Join the Matrix chat at https://matrix.to/#/#umschlag:matrix.org](https://img.shields.io/badge/matrix-%23umschlag-7bc9a4.svg)](https://matrix.to/#/#umschlag:matrix.org)
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/2320c92f27404b51a9f57ac6b6da9aff)](https://www.codacy.com/app/umschlag/umschlag-ui?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=umschlag/umschlag-ui&amp;utm_campaign=Badge_Grade)
@@ -20,6 +19,8 @@ Within this repository we are building the web interface for our [Umschlag API](
 
 You can download prebuilt binaries from the GitHub releases or from our [download site](http://dl.umschlag.tech/ui). You are a Mac user? Just take a look at our [homebrew formula](https://github.com/umschlag/homebrew-umschlag).
 
+If you want to serve the UI by a regular webserver you can also find a tarball on our downloads server to just get the assets.
+
 
 ## Build
 
@@ -30,23 +31,13 @@ yarn install
 yarn build
 ```
 
-If you also want to publish it as a single binary with our server based on Go make sure you have a working Go environment, for further reference or a guide take a look at the [install instructions](http://golang.org/doc/install.html). This project requires Go >= v1.8.
+If you also want to publish it as a single binary with our server written in Go make sure you have a working Go environment, for further reference or a guide take a look at the [install instructions](http://golang.org/doc/install.html). This project requires Go >= v1.11.
 
 ```bash
-go get -d github.com/umschlag/umschlag-ui
-cd $GOPATH/src/github.com/umschlag/umschlag-ui
+git clone https://github.com/umschlag/umschlag-ui.git
+cd umschlag-ui
 
-# install retool
-make retool
-
-# sync dependencies
-make sync
-
-# generate code
-make generate
-
-# build binary
-make build
+make generate build
 
 ./bin/umschlag-ui -h
 ```
@@ -58,15 +49,15 @@ With the `make generate` command we are embedding all the static assets into the
 
 To start developing on this UI you have to execute only a few commands. To setup a NodeJS environment or even a Go environment is out of the scope of this document. To start development just execute those commands:
 
-```
+```bash
 yarn install
 yarn watch
 
-make retool sync generate build
+make generate build
 ./bin/umschlag-ui --log-level debug server --static dist/static/
 ```
 
-The development server reloads the used assets on every request. To properly work with it you need to start the [API server](https://github.com/umschlag/umschlag-api) separately since this project doesn't include it. After launching this command on a terminal you can access the web interface at [http://localhost:9000](http://localhost:9000).
+The development server reloads the used assets on every request. To properly work with it you need to start the [API server](https://github.com/umschlag/umschlag-api) separately since this project doesn't include it. After launching this command on a terminal you can access the web interface at [http://localhost:8080](http://localhost:8080).
 
 
 ## Security

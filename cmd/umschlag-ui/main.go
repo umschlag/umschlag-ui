@@ -18,7 +18,7 @@ func main() {
 
 	app := &cli.App{
 		Name:     "umschlag-ui",
-		Version:  version.Version.String(),
+		Version:  version.String,
 		Usage:    "docker distribution management system",
 		Authors:  authorList(),
 		Flags:    globalFlags(cfg),
